@@ -20,10 +20,10 @@ class RSLManager:
     def create_schema(self):
         if self.database:
 
-            # Scrap Table
+            # RSL Table
             self.curr.execute(
                 """
-                CREATE TABLE IF NOT EXISTS Scrap (
+                CREATE TABLE IF NOT EXISTS RSL (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 date DATE NOT NULL,
                 so INTEGER(7) NOT NULL,
@@ -76,8 +76,7 @@ class RSLManager:
             self.curr.execute(
                 """
                 CREATE TABLE IF NOT EXISTS Components (
-                id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
-                component_pn INTEGER NOT NULL, 
+                component_pn INTEGER PRIMARY KEY NOT NULL, 
                 description TEXT NOT NULL
                 )
                 """
@@ -141,11 +140,20 @@ class RSLManager:
         if (self.database and self.curr) != None:
             if math.isnan(scrap_qty):
                 scrap_qty = 0
-            self.curr.execute("""INSERT INTO Scrap (date, so, component_pn, scrap_code, scrap_qty, cost) VALUES (?, ?, ?, ?, ?, ?)""", (date, so, component_pn, scrap_code, scrap_qty, scrap_cost))
+            self.curr.execute("""INSERT INTO RSL (date, so, component_pn, scrap_code, scrap_qty, cost) VALUES (?, ?, ?, ?, ?, ?)""", (date, so, component_pn, scrap_code, scrap_qty, scrap_cost))
 
     def add_or_get_components(self, component_pn, description):
         if (self.database and self.curr) != None:
-            self.curr.execute("""INSERT INTO Components (component_pn, description) VALUES (?, ?)""", (component_pn, description))
+            component_pn = int(component_pn)
+            self.curr.execute("""SELECT component_pn FROM Components WHERE component_pn = ?""", (component_pn, ))
+            result = self.curr.fetchone()
+            if result:
+                return result[0]
+            else:
+                self.curr.execute("""INSERT INTO Components (component_pn, description) VALUES (?, ?)""", (component_pn, description))
+                self.curr.execute("""SELECT component_pn FROM Components WHERE component_pn = ?""", (component_pn, ))
+                result = self.curr.fetchone()
+            
 
     def input_models(self, csvfile):
         df = pd.read_csv(csvfile)
@@ -184,9 +192,29 @@ class RSLManager:
             
         self.database.commit()
 
-    def run_analysis(self, shoporder):
+    def analyze_shoporder_scrap(self, shoporder):
+        df = pd.DataFrame(columns = ['Item', 'Qty', 'Scrap Code'])
         shoporder = int(shoporder)
-        self.curr.execute("""SELECT id FROM Scrap WHERE so = ?""", (shoporder, ))
+        self.curr.execute("""SELECT component_pn, scrap_code, scrap_qty FROM RSL WHERE so = ?""", (shoporder, ))
         scrap_list = self.curr.fetchall()
-        print(len(scrap_list))
-        print(scrap_list)
+        
+        self.curr.execute("""SELECT name FROM ScrapCodes""")
+        scrapcode_list = self.curr.fetchall()
+        print(scrapcode_list)
+        
+        for i in scrap_list:
+            self.curr.execute("""SELECT description FROM Components WHERE component_pn = ?""", (i[0], ))
+            component_desc = self.curr.fetchone()[0]
+            self.curr.execute("""SELECT name FROM ScrapCodes WHERE id = ?""", (i[1], ))
+            scrapcode_name = self.curr.fetchone()[0]
+            df.loc[-1] = [component_desc, i[2], scrapcode_name]
+            df.index = df.index + 1
+            df = df.sort_index()
+            # print(f"\nItem: {component_desc}\nQty: {i[2]}\nScrapcode: {scrapcode_name}")
+        
+        
+            
+    def anal(self):
+        pass
+    
+        

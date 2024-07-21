@@ -8,7 +8,11 @@ def main():
         fuck.input_data(rsl)
 
     def test_ass():
-        fuck.run_analysis('1522861')
+        fuck.analyze_shoporder_scrap('1510779')
+    
+    
+    
+
     
     db_name = 'LapFusionRSL.db'
     fuck = RSLManager(db_name)
@@ -16,15 +20,13 @@ def main():
 
     rsl = os.path.join(os.getcwd(), 'rsl', 'LapFusion_RSL_2024.csv')
     models = os.path.join(os.getcwd(), 'references', 'VoyantModels.csv')
-    # main_ass()
-    test_ass()
-
-
     
+    
+    
+    main_ass()
+    # test_ass()
 
-def test(fuck):
-    fuck.run_analysis('1522861')
 
 if __name__ == '__main__':
-    os.system('cls')
+    os.system('clear')
     main()
