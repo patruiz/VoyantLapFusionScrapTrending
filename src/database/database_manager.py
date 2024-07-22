@@ -72,13 +72,22 @@ class RSLManager:
                 """
             )
 
-            # Component Table
+            # Component Table YOU CAN HAVE TWO PRIMARY KEYS AND THE UNIQUE VALUE IS THE COMBINATION 
             self.curr.execute(
                 """
                 CREATE TABLE IF NOT EXISTS Components (
                 component_pn INTEGER PRIMARY KEY NOT NULL, 
                 description TEXT NOT NULL
                 )
+                """
+            )
+
+            # Scrap Table
+            self.curr.execute(
+                """
+                CREATE TABLE IF NOT EXISTS ScrapLog (
+                shoporder INTEGER(7) PRIMARY KEY NOT NULL
+                FOREIGN KEY(shoporder) REFERENCES ShopOrders())
                 """
             )
 
@@ -200,7 +209,6 @@ class RSLManager:
         
         self.curr.execute("""SELECT name FROM ScrapCodes""")
         scrapcode_list = self.curr.fetchall()
-        print(scrapcode_list)
         
         for i in scrap_list:
             self.curr.execute("""SELECT description FROM Components WHERE component_pn = ?""", (i[0], ))
@@ -210,10 +218,30 @@ class RSLManager:
             df.loc[-1] = [component_desc, i[2], scrapcode_name]
             df.index = df.index + 1
             df = df.sort_index()
+        # print(df)
             # print(f"\nItem: {component_desc}\nQty: {i[2]}\nScrapcode: {scrapcode_name}")
         
-        
+    def update_scraplog(self):
+        if (self.database and self.curr) != None:
+            self.curr.execute("""SELECT id FROM ScrapCodes""")
+            scrapcodes = []
+            for i in self.curr.fetchall():
+                scrapcodes.append(i[0])
             
+            self.curr.execute("""SELECT name FROM pragma_table_info('ScrapLog')""")
+            scraplog_codes = []
+            for i in self.curr.fetchall():
+                scraplog_codes.append(i[0])
+
+            different_scrapcodes = []
+            for code in scrapcodes:
+                if code not in scraplog_codes:
+                    different_scrapcodes.append(code)
+
+            print(f"Scrap Code: {scrapcodes}\n")
+            print(f"Scrap Log Codes: {scraplog_codes}\n")
+            print(f"Different Scrap Codes: {different_scrapcodes}\n")
+        
     def anal(self):
         pass
     

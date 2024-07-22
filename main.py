@@ -21,12 +21,12 @@ def main():
     rsl = os.path.join(os.getcwd(), 'rsl', 'LapFusion_RSL_2024.csv')
     models = os.path.join(os.getcwd(), 'references', 'VoyantModels.csv')
     
+    fuck.update_scraplog()
     
-    
-    main_ass()
-    # test_ass()
+    # main_ass()
+    test_ass()
 
 
 if __name__ == '__main__':
-    os.system('clear')
+    os.system('cls')
     main()
