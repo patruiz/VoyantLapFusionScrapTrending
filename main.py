@@ -2,11 +2,11 @@ import os
 from src.database.database_manager import RSLManager
 
 def main():
-    def clear_ass():
+    def clear_cheese():
         if os.path.exists(db_name):
             os.remove(db_name)
 
-    def create_ass():
+    def create_cheese():
         cheeseball = RSLManager(db_name)
         cheeseball.open_connection()
         cheeseball.create_schema()
@@ -18,13 +18,13 @@ def main():
         cheeseball.load_references('Models', models)
         # cheeseball.input_data(rsl)
 
-    def run_ass():
+    def run_cheese():
         cheeseball = RSLManager(db_name)
         cheeseball.open_connection()
         cheeseball.run_rsl(rsl)
         cheeseball.analyze_QCscrap()
 
-    def test_ass():
+    def test_cheese():
         # cheeseball.get_shoporder_scrap('1510779')
         # cheeseball.update_scraplog()
         pass
@@ -42,12 +42,12 @@ def main():
     rsl = os.path.join(os.getcwd(), 'rsl', 'LapFusion_RSL_2024.csv')
     models = os.path.join(os.getcwd(), 'references', 'LapFusionModels.csv')
     
-    clear_ass()
+    clear_cheese()
     
-    create_ass()
-    run_ass()
-    # test_ass()
+    create_cheese()
+    run_cheese()
+    # test_cheese()
 
 if __name__ == '__main__':
-    os.system('clear')
+    os.system('cls')
     main()

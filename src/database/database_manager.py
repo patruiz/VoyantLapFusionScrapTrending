@@ -251,16 +251,15 @@ class RSLManager:
         
         self.curr.execute("""SELECT id FROM ScrapCodes WHERE plant = ?""", ('QC-DM1', ))
         for i in self.curr.fetchall():
-            try:
-                self.curr.execute(f"""ALTER TABLE QCScrapLog ADD COLUMN '{str(i[0])}' INTEGER DEFAULT 0 NOT NULL""")
-            except Exception as e:
-                print(f"Error adding Column: {e}")
+            print(i)
+            self.curr.execute(f"""ALTER TABLE QCScrapLog ADD COLUMN '{str(i[0])}' INTEGER DEFAULT 0 NOT NULL""")
         self.commit_changes()
     
     def _find_QCscrap(self):
         self.curr.execute("""SELECT num, tl_pn FROM ShopOrders""")
         shoporder_list = [i for i in self.curr.fetchall()]
         for shoporder in shoporder_list:
+            print(shoporder[0])
             self.curr.execute(f"""SELECT shoporder FROM QCScrapLog WHERE shoporder = ?""", (shoporder[0], ))
             result = self.curr.fetchone()
             if result != None: 
@@ -270,7 +269,8 @@ class RSLManager:
             scrap_list = self.curr.fetchall()
             self.curr.execute("""INSERT INTO QCScrapLog (shoporder) VALUES (?)""", (shoporder[0], ))
             for scrap in scrap_list:
-                self.curr.execute(f"""UPDATE QCScrapLog SET {str(scrap[0])} = ? WHERE shoporder = ?""", (int(scrap[1]), shoporder[0]))
+                print(scrap)
+                self.curr.execute(f"""UPDATE QCScrapLog SET '{str(scrap[0])}' = ? WHERE shoporder = ?""", (int(scrap[1]), shoporder[0]))
         self.commit_changes()
             
     def _update_QCscraplog(self):
