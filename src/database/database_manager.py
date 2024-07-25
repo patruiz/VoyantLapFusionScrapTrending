@@ -16,9 +16,10 @@ class RSLManager:
         try:
             self.database = sqlite3.connect(self.name)
             self.curr = self.database.cursor()
-            print(f"\nConnected to {self.name}")
+            # print(f"\nConnected to {self.name}")
         except Exception as e:
-            print(f"Connection Failed: {e}")
+            # print(f"Connection Failed: {e}")
+            pass
                 
     def commit_changes(self):
         if self.database:
@@ -290,8 +291,8 @@ class RSLManager:
     def analyze_scrap(self, shoporder):
         if (self.database and self.curr) != None:
             self._create_scraplog_table()
-            self._find_fulldevice_scrap()
-            self._get_fulldevice_scrap(shoporder)
+            self._enter_scraplog_data()
+            # self._get_fulldevice_scrap(shoporder)
             
     def _create_scraplog_table(self):
         self.curr.execute(
@@ -302,25 +303,60 @@ class RSLManager:
             """
         )
         
-        self.curr.execute("""SELECT id FROM ScrapCodes""")
-        scrapcodes = set([int(i[0]) for i in self.curr.fetchall()])
+        self.curr.execute("""SELECT name FROM ScrapCodes""")
+        scrapcodes = set([i[0] for i in self.curr.fetchall()])
         
         for i in sorted(scrapcodes):
             self.curr.execute(f"""ALTER TABLE ScrapLog ADD COLUMN '{i}' INTEGER DEFAULT 0 NOT NULL""")
         self.commit_changes()
     
-    def _find_fulldevice_scrap(self):
-        self.curr.execute("""SELECT num, tl_pn FROM ShopOrders""")
-        shoporders_pn_list = [i for i in self.curr.fetchall()]
+    def _enter_scraplog_data(self):
+        self.curr.execute("""SELECT num, tl_pn FROM ShopOrders""") # Creates a list of the Shop Orders in the ShopOrder Table
         
-        for shoporder, tl_pn in shoporders_pn_list:
-            self.curr.execute("""INSERT INTO ScrapLog (shoporder) VALUES (?)""", (shoporder, ))
-            self.curr.execute("""SELECT so, scrap_code, scrap_qty FROM RSL WHERE so = ? AND component_pn = ?""", (shoporder, tl_pn))
-            # print(f"\nShop Order {shoporder} Scrap List: {self.curr.fetchall()}")
-            scrap_list = [i for i in self.curr.fetchall()]
-            for scrap in scrap_list:
-                self.curr.execute(f"""UPDATE ScrapLog SET '{str(scrap[1])}' = ? WHERE shoporder = ?""", (scrap[2], scrap[0]))
-            self.commit_changes()
+        for shoporder, tl_pn in self.curr.fetchall(): # Checks each Shop Order from the list to see if they exist in the ScrapLog Table
+            self.curr.execute("""SELECT shoporder FROM ScrapLog WHERE shoporder = ?""", (shoporder, ))
+            if self.curr.fetchone(): # Checks if the Shop Order exists within the ScrapLog Table
+                # Need to create a list of all scrapcodes available or whatever 
+                self.curr.execute(f"""SELECT {scrap_name} FROM ScrapLog WHERE shoporder = ?""", (scrapname?????, shoporder)) # Checks if a Scrap Name exists within a Shop Order inside the ScrapLog Table
+                if self.curr.fetchone():
+                    print('nice nerd, now just find the qty and then add to it')
+                else:
+                    print("Enter in the scrap name and scrap qty into the shop order since it doesnt exist")
+            else:
+                print('false')
+
+
+
+            # for scraplog_shoporder in self.curr.fetchall(): # Creates a list of all Shop Orders in the ScrapLog Table
+                # print(scraplog_shoporder)
+                # if scraplog_shoporder is None: # Checks each Shop Order in the ScrapLog Table
+                #     print(scraplog_shoporder)
+                #     # Insert scraplog_shoporder_scrapname_scrapqty
+                # elif scraplog_shoporder is not None:
+                #     self.curr.execute()
+                #     print("find if scrap name exists in shop order")
+                #     if scraplog_shoporder_scrap 
+
+
+            # if check != None: # Need to check if this part of the function works while there is already existing item sin the ScrapLog
+            #     self.curr.execute("""SELECT so, name, scrap_code, scrap_qty FROM RSL INNER JOIN ScrapCodes ON RSL.scrap_code = ScrapCodes.id WHERE so = ? AND component_pn = ?""", (shoporder, tl_pn))
+            #     scrap_list = [i for i in self.curr.fetchall()]
+
+            #     for so_num, scrap_name, scrap_code, scrap_qty in scrap_list:
+            #         self.curr.execute(f"""SELECT '{str(scrap_qty)}' FROM ScrapLog WHERE shoporder = ? AND '{str(scrap_name)}' = ?""", (int(so_num), scrap_name))
+            #         swag = self.curr.fetchall()
+            # else:
+            #     self.curr.execute("""INSERT INTO ScrapLog (shoporder) VALUES (?)""", (shoporder, ))
+            #     self.curr.execute("""SELECT so, name, scrap_code, scrap_qty FROM RSL INNER JOIN ScrapCodes ON RSL.scrap_code = ScrapCodes.id WHERE so = ? AND component_pn = ?""", (shoporder, tl_pn))
+            #     scrap_list = [i for i in self.curr.fetchall()]
+
+            #     for so_num, scrap_name, scrap_code, scrap_qty in scrap_list:
+            #         self.curr.execute(f"""SELECT '{str(scrap_qty)}' FROM ScrapLog WHERE shoporder = ? AND '{str(scrap_name)}' = ?""", (int(so_num), scrap_name))
+                #     swag = self.curr.fetchall()
+
+
+                #     self.curr.execute(f"""UPDATE ScrapLog SET '{str(scrap[1])}' = ? WHERE shoporder = ?""", (int(scrap[3]), int(scrap[0])))
+                #     self.commit_changes()
             
     def _get_fulldevice_scrap(self, shoporder):
         # self.curr.execute("""SELECT sql FROM sqlite_master WHERE tbl_name = ? AND type = 'table""", ('ScrapLog', ))
