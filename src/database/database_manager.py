@@ -1,3 +1,4 @@
+import csv
 import math
 import string
 import sqlite3 
@@ -21,6 +22,17 @@ class RSLManager:
     def commit_changes(self):
         if self.database:
             self.database.commit()
+
+    def export_table(self, table):
+        if (self.database and self.curr) != None:
+            self.curr.execute(f"""SELECT * FROM {table}""")
+            rows = self.curr.fetchall()
+
+            with open (f"{table}_export.csv", "w") as csvfile:
+                csv_writer = csv.writer(csvfile, delimiter = "\t")
+                csv_writer.writerow(i[0] for i in self.curr.description)
+                for row in rows:
+                    csv_writer.writerow(row)
 
     def create_schema(self):
         if self.database:

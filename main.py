@@ -24,6 +24,7 @@ def main():
         cheeseball.run_rsl(rsl)
         # cheeseball.analyze_QCscrap()
         cheeseball.analyze_scrap()
+        cheeseball.export_table('ScrapLog')
 
     def test_cheese():
         # cheeseball.get_shoporder_scrap('1510779')
