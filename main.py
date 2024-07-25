@@ -22,7 +22,8 @@ def main():
         cheeseball = RSLManager(db_name)
         cheeseball.open_connection()
         cheeseball.run_rsl(rsl)
-        cheeseball.analyze_QCscrap()
+        # cheeseball.analyze_QCscrap()
+        cheeseball.analyze_scrap()
 
     def test_cheese():
         # cheeseball.get_shoporder_scrap('1510779')
@@ -49,5 +50,5 @@ def main():
     # test_cheese()
 
 if __name__ == '__main__':
-    os.system('cls')
+    os.system('clear')
     main()

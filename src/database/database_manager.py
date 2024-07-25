@@ -29,7 +29,6 @@ class RSLManager:
             self._create_lapfusionmodels_table()
             self._create_scrapcodes_table()
             self._create_components_table()
-            self._create_QCscraplog_table()
             self._create_plant_table()
             self._create_operations_table()
 
@@ -235,141 +234,108 @@ class RSLManager:
             else:
                 return result[0]
 
-    def analyze_QCscrap(self):
-        if (self.database and self.curr) != None:
-            self._create_QCscraplog_table()
-            self._find_QCscrap()
+    # def analyze_QCscrap(self):
+    #     if (self.database and self.curr) != None:
+    #         self._create_QCscraplog_table()
+    #         self._find_QCscrap()
 
-    def _create_QCscraplog_table(self):
+    # def _create_QCscraplog_table(self):
+    #     self.curr.execute(
+    #         """
+    #         CREATE TABLE IF NOT EXISTS QCScrapLog (
+    #         shoporder INTEGER(7) PRIMARY KEY NOT NULL,
+    #         FOREIGN KEY(shoporder) REFERENCES ShopOrders(num))
+    #         """
+    #     )
+        
+    #     self.curr.execute("""SELECT id FROM ScrapCodes WHERE plant = ?""", ('QC-DM1', ))
+    #     for i in self.curr.fetchall():
+    #         self.curr.execute(f"""ALTER TABLE QCScrapLog ADD COLUMN '{str(i[0])}' INTEGER DEFAULT 0 NOT NULL""")
+    #         self.commit_changes()
+    
+    # def _find_QCscrap(self):
+    #     self.curr.execute("""SELECT num, tl_pn FROM ShopOrders""")
+    #     shoporder_list = [i for i in self.curr.fetchall()]
+    #     for shoporder in shoporder_list:
+    #         print(f"\nShoporder: {shoporder[0]}")
+    #         self.curr.execute(f"""SELECT shoporder FROM QCScrapLog WHERE shoporder = ?""", (shoporder[0], ))
+    #         result = self.curr.fetchone()
+    #         # if result != None: 
+    #         #     continue
+
+    #         self.curr.execute("""SELECT scrap_code, scrap_qty FROM RSL WHERE so = ? AND component_pn = ? AND plant = ?""", (shoporder[0], shoporder[1], 'QC-DM1'))
+    #         scrap_list = self.curr.fetchall()
+    #         print(f"QC-DM1 Scrap List: {scrap_list}")
+    #         self.curr.execute("""INSERT INTO QCScrapLog (shoporder) VALUES (?)""", (shoporder[0], ))
+    #         for scrap in scrap_list:
+    #             try:
+    #                 self.curr.execute(f"""UPDATE QCScrapLog SET '{str(scrap[0])}' = ? WHERE shoporder = ?""", (int(scrap[1]), shoporder[0]))
+    #                 self.commit_changes()
+    #             except Exception as e:
+    #                 print(f"Error: {e}")
+                    
+    def analyze_scrap(self):
+        if (self.database and self.curr) != None:
+            self._create_scraplog_table()
+            self._find_fulldevice_scrap()
+            
+    def _create_scraplog_table(self):
         self.curr.execute(
             """
-            CREATE TABLE IF NOT EXISTS QCScrapLog (
+            CREATE TABLE IF NOT EXISTS ScrapLog (
             shoporder INTEGER(7) PRIMARY KEY NOT NULL,
             FOREIGN KEY(shoporder) REFERENCES ShopOrders(num))
             """
         )
         
-        self.curr.execute("""SELECT id FROM ScrapCodes WHERE plant = ?""", ('QC-DM1', ))
-        for i in self.curr.fetchall():
-            print(i)
-            self.curr.execute(f"""ALTER TABLE QCScrapLog ADD COLUMN '{str(i[0])}' INTEGER DEFAULT 0 NOT NULL""")
+        self.curr.execute("""SELECT id FROM ScrapCodes""")
+        scrapcodes = set([int(i[0]) for i in self.curr.fetchall()])
+        
+        for i in sorted(scrapcodes):
+            self.curr.execute(f"""ALTER TABLE ScrapLog ADD COLUMN '{i}' INTEGER DEFAULT 0 NOT NULL""")
         self.commit_changes()
     
-    def _find_QCscrap(self):
+    def _find_fulldevice_scrap(self):
         self.curr.execute("""SELECT num, tl_pn FROM ShopOrders""")
-        shoporder_list = [i for i in self.curr.fetchall()]
-        for shoporder in shoporder_list:
-            print(shoporder[0])
-            self.curr.execute(f"""SELECT shoporder FROM QCScrapLog WHERE shoporder = ?""", (shoporder[0], ))
-            result = self.curr.fetchone()
-            if result != None: 
-                continue
-
-            self.curr.execute("""SELECT scrap_code, scrap_qty FROM RSL WHERE so = ? AND component_pn = ? AND plant = ?""", (shoporder[0], shoporder[1], 'QC-DM1'))
-            scrap_list = self.curr.fetchall()
-            self.curr.execute("""INSERT INTO QCScrapLog (shoporder) VALUES (?)""", (shoporder[0], ))
+        shoporders_pn_list = [i for i in self.curr.fetchall()]
+        
+        for shoporder, tl_pn in shoporders_pn_list:
+            self.curr.execute("""INSERT INTO ScrapLog (shoporder) VALUES (?)""", (shoporder, ))
+            self.curr.execute("""SELECT so, scrap_code, scrap_qty FROM RSL WHERE so = ? AND component_pn = ?""", (shoporder, tl_pn))
+            # print(f"\nShop Order {shoporder} Scrap List: {self.curr.fetchall()}")
+            scrap_list = [i for i in self.curr.fetchall()]
             for scrap in scrap_list:
-                print(scrap)
-                self.curr.execute(f"""UPDATE QCScrapLog SET '{str(scrap[0])}' = ? WHERE shoporder = ?""", (int(scrap[1]), shoporder[0]))
-        self.commit_changes()
-            
-    def _update_QCscraplog(self):
-        self.curr.execute("""INSERT INTO QCScrapLog (shoporder) VALUES (?)""", ())
-        pass
-        
-        # shoporder_list = [(i[0], i[1]) for i in self.curr.fetchall()]
-        # for shoporder in shoporder_list:
-        #     self.curr.execute(f"""SELECT id""")
-        
-    # def display_tables(self):
-    #     if self.database:
-    #         self.curr.execute("""SELECT name FROM sqlite_master WHERE type = 'table'""")
-    #         return self.curr.fetchall()
+                self.curr.execute(f"""UPDATE ScrapLog SET '{str(scrap[1])}' = ? WHERE shoporder = ?""", (scrap[2], scrap[0]))
+            self.commit_changes()
                 
-    # def add_or_get_components(self, component_pn, description):
-    #     if (self.database and self.curr) != None:
-    #         component_pn = int(component_pn)
-    #         self.curr.execute("""SELECT component_pn FROM Components WHERE component_pn = ?""", (component_pn, ))
-    #         result = self.curr.fetchone()
-    #         if result:
-    #             return result[0]
-    #         else:
-    #             self.curr.execute("""INSERT INTO Components (component_pn, description) VALUES (?, ?)""", (component_pn, description))
-    #             self.curr.execute("""SELECT component_pn FROM Components WHERE component_pn = ?""", (component_pn, ))
-    #             result = self.curr.fetchone()
+            
+            
+            
+            
+        # for shoporder, tl_pn in self.curr.fetchall():
+        #     shoporders.append(shoporder), tl_pns.append(tl_pn)
         
-    # def update_QCscraplog_codes(self):
-    #     if (self.database and self.curr) != None:
-    #         self.curr.execute("""SELECT id FROM ScrapCodes""")
-    #         scrapcodes = [i[0] for i in self.curr.fetchall()]
+        # for tl_pn in tl_pns:
+        #     self.curr.execute("""SELECT so, scrap_code, scrap_qty FROM RSL WHERE )
 
-    #         self.curr.execute("""PRAGMA table_info(QCScrapLog)""")
-    #         scraplog_columns = [info[1] for info in self.curr.fetchall()]
+        # # for shoporder in shoporders:
+        # #     print(f"\nShop Order: {shoporder}")
+        # #     self.curr.execute(f"""SELECT shoporder FROM ScrapLog WHERE shoporder = ? AND component)
 
-    #         missing_columns = [code for code in scrapcodes if str(code) not in scraplog_columns]
 
-    #         for code in missing_columns:
-    #             try:
-    #                 self.curr.execute(f"""ALTER TABLE QCScrapLog ADD COLUMN '{str(code)}' INTEGER DEFAULT 0 NOT NULL""")
-    #             except Exception as e:
-    #                 print(f'Error adding Column: {e}')
 
-    #         self.commit_changes()
 
-    
-    # def add_or_get_model(self, material_num, model):
-    #     if (self.database and self.curr) != None:
-    #         material_num = int(material_num)
-    #         self.curr.execute("""SELECT tl_pn FROM LapFusionModels WHERE tl_pn = ?""", (material_num, ))
-    #         result = self.curr.fetchone()
-    #         if result:
-    #             return result[0]
-    #         else:
-    #             self.curr.execute("""INSERT INTO LapFusionModels (tl_pn, model) VALUES (?, ?)""", (material_num, model))
-    #             self.curr.execute("""SELECT tl_pn FROM LapFusionModels WHERE tl_pn = ?""", (material_num, ))
-    #             result = self.curr.fetchone()
-    #             return result[0]
 
-    # def add_or_get_scrapcode(self, id, plant, name):
-    #     if (self.database and self.curr) != None:
-    #         id = int(id)
-    #         self.curr.execute("""SELECT id, plant FROM ScrapCodes WHERE id = ? and plant = ?""", (id, plant))
-    #         result = self.curr.fetchone()
-    #         if result:
-    #             return result[0]
-    #         else:
-    #             self.curr.execute("""INSERT INTO ScrapCodes (id, plant, name) VALUES (?, ?, ?)""", (id, plant, name))
-    #             self.curr.execute("""SELECT id FROM ScrapCodes WHERE id = ?""", (id, ))
-    #             result = self.curr.fetchone()
-    #             return result
 
-    # def input_models(self, csvfile):
-    #     df = pd.read_csv(csvfile)
-    #     for index, val in df.iterrows():
-    #         _mat_num = val.loc['Material Number']
-    #         _model = val.loc['Model']
-    #         self.add_or_get_model(_mat_num, _model)
-    #     self.commit_changes()
-    #     print(f"\nVoyant Model References Successfully Loaded . . .")
 
-    # def get_shoporder_scrap(self, shoporder):
-    #     df = pd.DataFrame(columns = ['Item', 'Qty', 'Scrap Code'])
-    #     shoporder = int(shoporder)
-    #     self.curr.execute("""SELECT component_pn, scrap_code, scrap_qty FROM RSL WHERE so = ?""", (shoporder, ))
-    #     scrap_list = self.curr.fetchall()
-        
-    #     self.curr.execute("""SELECT name FROM ScrapCodes""")
-    #     scrapcode_list = self.curr.fetchall()
-        
-    #     for i in scrap_list:
-    #         self.curr.execute("""SELECT description FROM Components WHERE component_pn = ?""", (i[0], ))
-    #         component_desc = self.curr.fetchone()[0]
-    #         self.curr.execute("""SELECT name FROM ScrapCodes WHERE id = ?""", (i[1], ))
-    #         scrapcode_name = self.curr.fetchone()[0]
-    #         df.loc[-1] = [component_desc, i[2], scrapcode_name]
-    #         df.index = df.index + 1
-    #         df = df.sort_index()
-    #     print(df)
+
+
+
+
+
+
+
+
 
     def get_shoporder_scrap(self, shoporder):
         shoporder = int(shoporder)
@@ -385,12 +351,6 @@ class RSLManager:
             elif scrap[2] == 'QC-DM1':
                 qc_sum = qc_sum + int(scrap[1])
         print(dm1_sum, qc_sum)
-
-    
-
-    # def analyze_scraplog(self):
-    #     if (self.database and self.curr) != None:
-    #         self.curr.execute(""" """)
 
 
     def anal(self):
