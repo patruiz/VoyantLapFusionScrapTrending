@@ -1,3 +1,4 @@
+import os
 import csv
 import math
 import string
@@ -286,10 +287,11 @@ class RSLManager:
     #             except Exception as e:
     #                 print(f"Error: {e}")
                     
-    def analyze_scrap(self):
+    def analyze_scrap(self, shoporder):
         if (self.database and self.curr) != None:
             self._create_scraplog_table()
             self._find_fulldevice_scrap()
+            self._get_fulldevice_scrap(shoporder)
             
     def _create_scraplog_table(self):
         self.curr.execute(
@@ -319,6 +321,40 @@ class RSLManager:
             for scrap in scrap_list:
                 self.curr.execute(f"""UPDATE ScrapLog SET '{str(scrap[1])}' = ? WHERE shoporder = ?""", (scrap[2], scrap[0]))
             self.commit_changes()
+            
+    def _get_fulldevice_scrap(self, shoporder):
+        # self.curr.execute("""SELECT sql FROM sqlite_master WHERE tbl_name = ? AND type = 'table""", ('ScrapLog', ))
+        self.curr.execute("""PRAGMA table_info(ScrapLog)""")
+        scrap_codes = [i[1] for i in self.curr.fetchall()]
+        
+        scrap_code_names = []
+        for code in scrap_codes:
+            self.curr.execute("""SELECT name FROM ScrapCodes WHERE id = ?""", (code, ))
+            result = self.curr.fetchone()
+            if result is None:
+                pass
+            else:
+                scrap_code_names.append((code, result[0]))
+                
+        df = pd.read_csv(os.path.join(os.getcwd(), 'ScrapLog_export.csv'), delimiter = "\t")
+        new_headers = []
+        for column in df.columns:
+            for scrap in scrap_code_names:
+                print(scrap)
+                if str(column) == str(scrap[0]):
+                    print(column, str(scrap[0]), str(scrap[1]))
+                    new_headers.append(scrap[1])
+        
+        print(new_headers)
+        df.columns = new_headers
+        # print(df)      
+        
+        
+        # print(self.curr.fetchall())   
+        # self.curr.execute("""SELECT * FROM ScrapLog WHERE shoporder = ?""", (shoporder, ))
+        
+            
+            
                 
             
             
