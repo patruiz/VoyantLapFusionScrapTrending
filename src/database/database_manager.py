@@ -12,6 +12,7 @@ class RSLManager:
         self.curr = None
         self.change_log = []
 
+    # GENERAL DATABASE FUNCTION
     def open_connection(self):
         try:
             self.database = sqlite3.connect(self.name)
@@ -31,11 +32,17 @@ class RSLManager:
             rows = self.curr.fetchall()
 
             with open (f"{table}_export.csv", "w") as csvfile:
-                csv_writer = csv.writer(csvfile, delimiter = "\t")
+                csv_writer = csv.writer(csvfile, delimiter = ",")
                 csv_writer.writerow(i[0] for i in self.curr.description)
                 for row in rows:
                     csv_writer.writerow(row)
-
+                    
+    def remove_blank_columns(self, csvfile):
+        df = pd.read_csv(csvfile)
+        df = df.loc[:, (df != 0).any(axis=0)]
+        df.to_csv(csvfile)
+        
+    # SCHEMA FUNCTION
     def create_schema(self):
         if self.database:
             self._create_rsl_table()
@@ -135,7 +142,8 @@ class RSLManager:
             )
             """
         )
-        
+    
+    # REFERENCE TABLE FUNCTIONS
     def load_references(self, ref_type, file_path, plant = None):
         if (ref_type == 'Plants' and plant == None):
             self._load_plants(file_path)
@@ -186,7 +194,8 @@ class RSLManager:
             _model = val.iloc[0]
             _matnum = val.iloc[1]
             self.curr.execute("""INSERT INTO LapFusionModels (tl_pn, model) VALUES (?, ?)""", (_matnum, _model))
-                
+    
+    # RSL FUNCTIONS            
     def run_rsl(self, csvfile):
         df = pd.read_csv(csvfile)
         for index, val in df.iterrows():
@@ -288,42 +297,111 @@ class RSLManager:
     #             except Exception as e:
     #                 print(f"Error: {e}")
                     
-    def analyze_scrap(self, shoporder):
+    # SCRAP FUNCTIONS 
+    def main_scrap_function(self):
         if (self.database and self.curr) != None:
-            self._create_scraplog_table()
-            self._enter_scraplog_data()
+            self._create_scraplog_tables()
+            self._update_scraplog_columns()
+            self._add_scraplog_shoporders()
+            self._input_scraplog_data()
+            
             # self._get_fulldevice_scrap(shoporder)
             
-    def _create_scraplog_table(self):
+    def _create_scraplog_tables(self):
         self.curr.execute(
             """
-            CREATE TABLE IF NOT EXISTS ScrapLog (
+            CREATE TABLE IF NOT EXISTS QCScrapLog (
             shoporder INTEGER(7) PRIMARY KEY NOT NULL,
-            FOREIGN KEY(shoporder) REFERENCES ShopOrders(num))
+            FOREIGN KEY (shoporder) REFERENCES ShopOrders(num)
+            )
             """
         )
         
+        self.curr.execute(
+            """
+            CREATE TABLE IF NOT EXISTS ProdScrapLog (
+            shoporder INTEGER (7) PRIMARY KEY NOT NULL, 
+            FOREIGN KEY (shoporder) REFERENCES ShopOrders(num)
+            )
+            """
+        )
+    
+    def _update_scraplog_columns(self):
         self.curr.execute("""SELECT name FROM ScrapCodes""")
         scrapcodes = set([i[0] for i in self.curr.fetchall()])
         
         for i in sorted(scrapcodes):
-            self.curr.execute(f"""ALTER TABLE ScrapLog ADD COLUMN '{i}' INTEGER DEFAULT 0 NOT NULL""")
+            self.curr.execute(f"""ALTER TABLE QCScrapLog ADD COLUMN '{i}' INTEGER DEFAULT 0 NOT NULL""")
+            self.curr.execute(f"""ALTER TABLE ProdScrapLog ADD COLUMN '{i}' INTEGER DEFAULT 0 NOT NULL""")
         self.commit_changes()
-    
-    def _enter_scraplog_data(self):
-        self.curr.execute("""SELECT num, tl_pn FROM ShopOrders""") # Creates a list of the Shop Orders in the ShopOrder Table
         
+    def _add_scraplog_shoporders(self):
+        self.curr.execute("""SELECT num, tl_pn FROM ShopOrders""") # Creates a list of the Shop Orders in the ShopOrder Table
         for shoporder, tl_pn in self.curr.fetchall(): # Checks each Shop Order from the list to see if they exist in the ScrapLog Table
-            self.curr.execute("""SELECT shoporder FROM ScrapLog WHERE shoporder = ?""", (shoporder, ))
-            if self.curr.fetchone(): # Checks if the Shop Order exists within the ScrapLog Table
-                # Need to create a list of all scrapcodes available or whatever 
-                self.curr.execute(f"""SELECT {scrap_name} FROM ScrapLog WHERE shoporder = ?""", (scrapname?????, shoporder)) # Checks if a Scrap Name exists within a Shop Order inside the ScrapLog Table
-                if self.curr.fetchone():
-                    print('nice nerd, now just find the qty and then add to it')
-                else:
-                    print("Enter in the scrap name and scrap qty into the shop order since it doesnt exist")
-            else:
-                print('false')
+            self.curr.execute("""SELECT shoporder FROM QCScrapLog WHERE shoporder = ?""", (shoporder, ))
+            # print(f"\n******************************\n     SHOP ORDER {shoporder}\n******************************")
+            if self.curr.fetchone() == None: # Adds Shop Order from the list to the ScrapLog Table
+                # print(f"***** Adding {shoporder} to QCScrapLog *****")
+                self.curr.execute("""INSERT INTO QCScrapLog (shoporder) VALUES (?)""", (shoporder, ))
+                
+            self.curr.execute("""SELECT shoporder FROM ProdScrapLog WHERE shoporder = ?""", (shoporder, ))
+            if self.curr.fetchone() == None:
+                self.curr.execute("""INSERT INTO ProdScrapLog (shoporder) VALUES (?)""", (shoporder, ))
+
+        self.database.commit()
+        
+    def _input_scraplog_data(self):
+        self.curr.execute("""SELECT num, tl_pn FROM ShopOrders""")
+        for shoporder, tl_pn in self.curr.fetchall():
+            self.curr.execute("""SELECT so, name, scrap_code, scrap_qty, RSL.plant FROM RSL INNER JOIN ScrapCodes ON RSL.scrap_code = ScrapCodes.id WHERE so = ? AND component_pn = ?""", (shoporder, tl_pn))
+            for so, name, scrap_code, scrap_qty, plant in self.curr.fetchall(): # Gets all full device scrap from RSL per Shop Order
+                if plant == 'DM1':
+                    self.curr.execute(f"""UPDATE ProdScrapLog SET '{name}' = ? WHERE shoporder = ?""", (scrap_qty, shoporder))
+                elif plant == 'QC-DM1':
+                    self.curr.execute(f"""UPDATE QCScrapLog SET '{name}' = ? WHERE shoporder = ?""", (scrap_qty, shoporder))
+        self.database.commit()
+            
+            
+    # ANALYSIS FUNCTIONS
+    def main_analysis_function(self, shoporder):
+        if (self.database and self.curr) != None:
+            self._get_qcscrap(shoporder)
+        else:
+            pass
+        
+    def _get_qcscrap(self, shoporder):
+        self.curr.execute("""SELECT * FROM PRAGMA table_into(QCScrapLog) WHERE name = ?""", (shoporder, ))
+        # columns = [info[1] for info in self.curr.fetchall()]
+        print(self.curr.fetchall())
+        # print(columns)
+        
+        # self.curr.execute("""SELECT """)
+        # print(columns)
+        
+        # self.curr.execute("""SELECT * FROM QCScrapLog WHERE shoporder = ?""", (shoporder, ))
+        # qcscrap_log = self.curr.fetchall()
+        # print(qcscrap_log)
+        # self.curr.execute("""SELECT * FROM ScrapCodes""")
+        # scrapcodes_list = [i[1] for i in self.curr.fetchall()]
+        # print(scrapcodes_list)
+        # print(len(qcscrap_log[0]), len(scrapcodes_list))
+        
+        
+        # if self.curr.fetchall():
+        #     print(self.curr.fetchone())
+        #     return self.curr.fetchone()
+        # else:
+        #     print("what the fuck is that shoporder?")
+        
+            #     scrap_list = [i for i in self.curr.fetchall()]
+                # self.curr.execute(f"""INSERT INTO ScrapLog (shoporder, {}) VALUES (?, ?)""", (shoporder, x))
+            #     self.curr.execute(f"""SELECT {scrap_name} FROM ScrapLog WHERE shoporder = ?""", (scrapname?????, shoporder)) # Checks if a Scrap Name exists within a Shop Order inside the ScrapLog Table
+            #     if self.curr.fetchone():
+            #         print('nice nerd, now just find the qty and then add to it')
+            #     else:
+            #         print("Enter in the scrap name and scrap qty into the shop order since it doesnt exist")
+            # else:
+            #     print('false')
 
 
 
@@ -358,31 +436,31 @@ class RSLManager:
                 #     self.curr.execute(f"""UPDATE ScrapLog SET '{str(scrap[1])}' = ? WHERE shoporder = ?""", (int(scrap[3]), int(scrap[0])))
                 #     self.commit_changes()
             
-    def _get_fulldevice_scrap(self, shoporder):
-        # self.curr.execute("""SELECT sql FROM sqlite_master WHERE tbl_name = ? AND type = 'table""", ('ScrapLog', ))
-        self.curr.execute("""PRAGMA table_info(ScrapLog)""")
-        scrap_codes = [i[1] for i in self.curr.fetchall()]
+    # def _get_fulldevice_scrap(self, shoporder):
+    #     # self.curr.execute("""SELECT sql FROM sqlite_master WHERE tbl_name = ? AND type = 'table""", ('ScrapLog', ))
+    #     self.curr.execute("""PRAGMA table_info(ScrapLog)""")
+    #     scrap_codes = [i[1] for i in self.curr.fetchall()]
         
-        scrap_code_names = []
-        for code in scrap_codes:
-            self.curr.execute("""SELECT name FROM ScrapCodes WHERE id = ?""", (code, ))
-            result = self.curr.fetchone()
-            if result is None:
-                pass
-            else:
-                scrap_code_names.append((code, result[0]))
+    #     scrap_code_names = []
+    #     for code in scrap_codes:
+    #         self.curr.execute("""SELECT name FROM ScrapCodes WHERE id = ?""", (code, ))
+    #         result = self.curr.fetchone()
+    #         if result is None:
+    #             pass
+    #         else:
+    #             scrap_code_names.append((code, result[0]))
                 
-        df = pd.read_csv(os.path.join(os.getcwd(), 'ScrapLog_export.csv'), delimiter = "\t")
-        new_headers = []
-        for column in df.columns:
-            for scrap in scrap_code_names:
-                print(scrap)
-                if str(column) == str(scrap[0]):
-                    print(column, str(scrap[0]), str(scrap[1]))
-                    new_headers.append(scrap[1])
+    #     df = pd.read_csv(os.path.join(os.getcwd(), 'ScrapLog_export.csv'), delimiter = "\t")
+    #     new_headers = []
+    #     for column in df.columns:
+    #         for scrap in scrap_code_names:
+    #             print(scrap)
+    #             if str(column) == str(scrap[0]):
+    #                 print(column, str(scrap[0]), str(scrap[1]))
+    #                 new_headers.append(scrap[1])
         
-        print(new_headers)
-        df.columns = new_headers
+    #     print(new_headers)
+    #     df.columns = new_headers
         # print(df)      
         
         
@@ -405,21 +483,6 @@ class RSLManager:
         # # for shoporder in shoporders:
         # #     print(f"\nShop Order: {shoporder}")
         # #     self.curr.execute(f"""SELECT shoporder FROM ScrapLog WHERE shoporder = ? AND component)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     def get_shoporder_scrap(self, shoporder):
         shoporder = int(shoporder)

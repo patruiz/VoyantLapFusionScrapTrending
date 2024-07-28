@@ -7,32 +7,39 @@ def main():
             os.remove(db_name)
 
     def create_cheese():
-        cheeseball = RSLManager(db_name)
-        cheeseball.open_connection()
-        cheeseball.create_schema()
-        cheeseball.load_references('Plants', plants)
-        cheeseball.load_references('Codes', dm1_codes, 'DM1')
-        cheeseball.load_references('Codes', qcdm1_codes, 'QC-DM1')
-        cheeseball.load_references('Operations', dm1_operations, 'DM1')
-        cheeseball.load_references('Operations', qcdm1_operations, 'QC-DM1')
-        cheeseball.load_references('Models', models)
+        MASTER_CHEESE = RSLManager(db_name)
+        MASTER_CHEESE.open_connection()
+        MASTER_CHEESE.create_schema()
+        MASTER_CHEESE.load_references('Plants', plants)
+        MASTER_CHEESE.load_references('Codes', dm1_codes, 'DM1')
+        MASTER_CHEESE.load_references('Codes', qcdm1_codes, 'QC-DM1')
+        MASTER_CHEESE.load_references('Operations', dm1_operations, 'DM1')
+        MASTER_CHEESE.load_references('Operations', qcdm1_operations, 'QC-DM1')
+        MASTER_CHEESE.load_references('Models', models)
         # cheeseball.input_data(rsl)
 
     def run_cheese():
-        cheeseball = RSLManager(db_name)
-        cheeseball.open_connection()
-        cheeseball.run_rsl(rsl)
+        PARMESAN = RSLManager(db_name)
+        PARMESAN.open_connection()
+        PARMESAN.run_rsl(rsl)
         # cheeseball.analyze_QCscrap()
         
     def scrap_cheese():
-        cheeseball = RSLManager(db_name)
-        cheeseball.open_connection()
-        cheeseball.analyze_scrap(1514189)
-        cheeseball.export_table('ScrapLog')
+        MOZZARELLA = RSLManager(db_name)
+        MOZZARELLA.open_connection()
+        MOZZARELLA.main_scrap_function()
+        MOZZARELLA.export_table('QCScrapLog')
+        MOZZARELLA.remove_blank_columns('QCScrapLog_export.csv')
+        
+    def analysis_cheese():
+        GOUDA = RSLManager(db_name)
+        GOUDA.open_connection()
+        # GOUDA.main_analysis_function(1510779)
+        # ANALYZE_CHEESE.
 
     def test_cheese():
-        # cheeseball.get_shoporder_scrap('1510779')
-        # cheeseball.update_scraplog()
+        # CHEESE_DANNY.get_shoporder_scrap('1510779')
+        # CHEESE_DANNY.update_scraplog()
         pass
     
     
@@ -53,8 +60,9 @@ def main():
     create_cheese()
     run_cheese()
     scrap_cheese()
+    # analysis_cheese()
     # test_cheese()
 
 if __name__ == '__main__':
-    os.system('cls')
+    os.system('clear')
     main()
