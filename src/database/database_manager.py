@@ -408,10 +408,62 @@ class RSLManager:
             
     # REWORK FUNCTIONS
     def main_rework_function(self):
-        pass
+        if (self.database and self.curr) != None:
+            self._create_reworklog_tables()
+            self._update_reworklog_columnns()
+            self._add_reworklog_shoporders()
+            self._input_reworklog_data()
+        
+    def _create_reworklog_tables(self):
+        self.curr.execute(
+            """
+            CREATE TABLE IF NOT EXISTS ProdReworkLog(
+            shoporder INTEGER(7) PRIMARY KEY NOT NULL, 
+            FOREIGN KEY (shoporder) REFERENCES ShopOrders(num)
+            )
+            """
+        )
+        
+    def _update_reworklog_columnns(self):
+        self.curr.execute("""SELECT name FROM ScrapCodes""")
+        scrapcodes = set([i[0] for i in self.curr.fetchall()])
+        
+        for i in sorted(scrapcodes):
+            self.curr.execute(f"""ALTER TABLE ProdReworkLog ADD COLUMN '{i}' INTEGER DEFAULT 0 NOT NULL""")
+        self.commit_changes()
+        
+    def _add_reworklog_shoporders(self):
+        self.curr.execute("""SELECT num, tl_pn FROM ShopOrders""")
+        for shoporder, tl_pn in self.curr.fetchall():
+            self.curr.execute("""SELECT shoporder FROM ProdReworkLog WHERE shoporder = ?""", (shoporder, ))
+            if self.curr.fetchone() == None:
+                self.curr.execute("""INSERT INTO ProdReworkLog (shoporder) VALUES (?)""", (shoporder, ))
+        self.database.commit()
+        
+    def _input_reworklog_data(self):
+        self.curr.execute("""SELECT component_pn FROM Components WHERE description = ?""", ('HUB, 5MM FUSION', ))
+        hub_pns = [i[0] for i in self.curr.fetchall()]
+        
+        self.curr.execute("""SELECT num, tl_pn FROM ShopOrders""")
+        for shoporder, tl_pn in self.curr.fetchall():
+            self.curr.execute("""SELECT so, component_pn, name, scrap_code, scrap_qty, RSL.plant FROM RSL INNER JOIN ScrapCodes on RSL.scrap_code = ScrapCodes.id WHERE so = ? AND component_pn != ?""", (shoporder, tl_pn))
+            for so, component_pn, name, scrap_code, scrap_qty, plant in self.curr.fetchall():
+                self.curr.execute("""SELECT description FROM Components WHERE component_pn = ? AND tl_pn = ?""", (component_pn, tl_pn))
+                component_name = self.curr.fetchone()[0]
+                if component_pn in hub_pns:
+                    if name in ['Material Overissue', 'Material Underissue', 'Fixed Quantity', 'Defective Components']:
+                        continue
+                    else:
+                        # print(so, component_pn, component_name, name, scrap_code, scrap_qty, plant)
+                        self.curr.execute(f"""UPDATE ProdReworkLog SET '{name}' = ? WHERE shoporder = ?""", (scrap_qty/2, so))
+            self.database.commit()
             
             
-            
+                
+                
+                
+                
+                
     # ANALYSIS FUNCTIONS
     def main_analysis_function(self, csvfile):
         if (self.database and self.curr) != None:
@@ -425,4 +477,3 @@ class RSLManager:
         for model in models:
             for index, val in df.iterrows():
                 pass
-                

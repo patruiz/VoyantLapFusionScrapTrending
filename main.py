@@ -21,7 +21,12 @@ def main():
     def run_cheese():
         PARMESAN = RSLManager(db_name)
         PARMESAN.open_connection() 
-        PARMESAN.run_rsl(rsl)
+        PARMESAN.run_rsl(rsl_2024)
+        # PARMESAN.run_rsl(rsl_2023)
+        # PARMESAN.run_rsl(rsl_2022)
+        # PARMESAN.run_rsl(rsl_2021)
+        # PARMESAN.run_rsl(rsl_2020)
+        # PARMESAN.run_rsl(rsl_2019)
         PARMESAN.close_connection()
         # cheeseball.analyze_QCscrap()
         
@@ -31,12 +36,18 @@ def main():
         MOZZARELLA.main_scrap_function()
         MOZZARELLA.close_connection()
         
+    def rework_cheese():
+        CHEDDAR = RSLManager(db_name)
+        CHEDDAR.open_connection()
+        CHEDDAR.main_rework_function()
+        CHEDDAR.close_connection()
+        
     def export_cheese():
         GOUDA = RSLManager(db_name)
         GOUDA.open_connection()
         GOUDA.export_table('QCScrapLog')
         GOUDA.export_table('ProdScrapLog')
-        # GOUDA.export_table('ProdReworkLog')
+        GOUDA.export_table('ProdReworkLog')
         GOUDA.close_connection()
 
     def test_cheese():
@@ -56,7 +67,12 @@ def main():
     qcdm1_codes = os.path.join(os.getcwd(), 'references', 'QC-DM1Codes.csv')
     dm1_operations = os.path.join(os.getcwd(), 'references', 'DM1Operations.csv')
     qcdm1_operations = os.path.join(os.getcwd(), 'references', 'QC-DM1Operations.csv')
-    rsl = os.path.join(os.getcwd(), 'rsl', 'LapFusion_RSL_2024.csv')
+    rsl_2024 = os.path.join(os.getcwd(), 'rsl', 'RSL_2024.csv')
+    # rsl_2023 = os.path.join(os.getcwd(), 'rsl', 'RSL_2023.csv')
+    # rsl_2022 = os.path.join(os.getcwd(), 'rsl', 'RSL_2023.csv')
+    # rsl_2021 = os.path.join(os.getcwd(), 'rsl', 'RSL_2021.csv')
+    # rsl_2020 = os.path.join(os.getcwd(), 'rsl', 'RSL_2020.csv')
+    # rsl_2019 = os.path.join(os.getcwd(), 'rsl', 'RSL_2019.csv')
     models = os.path.join(os.getcwd(), 'references', 'LapFusionModels.csv')
     
     clear_cheese()
@@ -64,6 +80,7 @@ def main():
     create_cheese()
     run_cheese()
     scrap_cheese()
+    rework_cheese()
     export_cheese()
     # test_cheese()
 
