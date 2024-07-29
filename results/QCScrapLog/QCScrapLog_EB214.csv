@@ -1,3 +1,8 @@
-Unnamed: 0,shoporder,Model,Blade Activation,Continuity Fail,Device Key Not Reading,Electrode Continuity,Exposed Wire (Static),Front Stops Not Touching,Fuse Switch,High Jaw Force ,High Jaw Gap,Incorrect Insulation Orientation,Insulation Damage,Jaw Short,Low Jaw Force,Low Jaw Gap,Misaligned ,QC- Particulate Matter,Scratches,Stuck Blade,Trigger Actuation,Trigger Retraction
-15,1512025,EB214,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
-31,1524588,EB214,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+Unnamed: 0,shoporder,Model,Blade Activation,Continuity Fail,Device Key Not Reading,Electrode Continuity,Exposed Wire (Static),Front Stops Not Touching,Fuse Switch,High Jaw Force,High Jaw Force ,High Jaw Gap,Incorrect Insulation Orientation,Insulation Damage,Jaw Isolation,Jaw Short,Low Jaw Force,Low Jaw Gap,Misaligned ,QC- Particulate Matter,Scratches,Stuck Blade,Tears,Trigger Actuation,Trigger Retraction,Unparallel Logos,Wrinkles
+15,1512025,EB214,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+31,1524588,EB214,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+67,1473554,EB214,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+166,1490056,EB214,3,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0
+179,1479547,EB214,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+221,1495283,EB214,1,0,0,1,0,0,3,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0
+249,1501521,EB214,0,0,0,0,0,0,1,0,0,0,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0

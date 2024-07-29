@@ -22,7 +22,7 @@ def main():
         PARMESAN = RSLManager(db_name)
         PARMESAN.open_connection() 
         PARMESAN.run_rsl(rsl_2024)
-        # PARMESAN.run_rsl(rsl_2023)
+        PARMESAN.run_rsl(rsl_2023)
         # PARMESAN.run_rsl(rsl_2022)
         # PARMESAN.run_rsl(rsl_2021)
         # PARMESAN.run_rsl(rsl_2020)
@@ -50,6 +50,12 @@ def main():
         GOUDA.export_table('ProdReworkLog')
         GOUDA.close_connection()
 
+    def check_cheese():
+        SALMON = RSLManager(db_name)
+        SALMON.open_connection()
+        SALMON.checking_function(1510779, 100928201)
+
+
     def test_cheese():
         CHEESE_DANNY = RSLManager(db_name)
         CHEESE_DANNY.open_connection()
@@ -68,22 +74,22 @@ def main():
     dm1_operations = os.path.join(os.getcwd(), 'references', 'DM1Operations.csv')
     qcdm1_operations = os.path.join(os.getcwd(), 'references', 'QC-DM1Operations.csv')
     rsl_2024 = os.path.join(os.getcwd(), 'rsl', 'RSL_2024.csv')
-    # rsl_2023 = os.path.join(os.getcwd(), 'rsl', 'RSL_2023.csv')
-    # rsl_2022 = os.path.join(os.getcwd(), 'rsl', 'RSL_2023.csv')
+    rsl_2023 = os.path.join(os.getcwd(), 'rsl', 'RSL_2023.csv')
+    # rsl_2022 = os.path.join(os.getcwd(), 'rsl', 'RSL_2022.csv')
     # rsl_2021 = os.path.join(os.getcwd(), 'rsl', 'RSL_2021.csv')
     # rsl_2020 = os.path.join(os.getcwd(), 'rsl', 'RSL_2020.csv')
     # rsl_2019 = os.path.join(os.getcwd(), 'rsl', 'RSL_2019.csv')
     models = os.path.join(os.getcwd(), 'references', 'LapFusionModels.csv')
     
-    clear_cheese()
-    
-    create_cheese()
-    run_cheese()
-    scrap_cheese()
-    rework_cheese()
-    export_cheese()
+    # clear_cheese()
+    # create_cheese()
+    # run_cheese()
+    # scrap_cheese()
+    # rework_cheese()
+    # export_cheese()
+    check_cheese()
     # test_cheese()
 
 if __name__ == '__main__':
-    os.system('clear')
+    os.system('cls')
     main()

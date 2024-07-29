@@ -1,7 +1,23 @@
-Unnamed: 0,shoporder,Model,Assembly Error,Contamination,Continuity Fail,Cosmetic Defect,"Cracks, Splits, or Chips",Damaged Harness Cable,Defective Components,Device Key Not Reading Device,Discolored Component,Engineering Sample,Exposed Wire (Dynamic),Failed Trigger Gauge,Failure to Unlock Trigger,Front Stops Not Touching,Front and Middle Stops Not Touching,Fuse Switch,High Jaw Force,High Jaw Gap,Incorrect Configuration,Incorrect Insulation Orientation,Incorrect/Missing Weld,Insulation Damage,Jaw Short,Low Jaw Force,Low Jaw Gap,Material Underissue,Middle Stops Not Touching,Open Handle,Particulate Matter,Rough Blade,Rough Jaw Actuation,Rough Knob Rotation,Scratches,Stuck Blade,Trigger Retraction,Vertical Misalignment,Wire Exposure
-3,1513568,EB211,0,0,2,2,0,5,0,0,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,0,5,0,0,0,1,0,1,0,0,0,0,0,0
-11,1504585,EB211,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
-27,1519721,EB211,0,0,1,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
-32,1524265,EB211,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
-51,1521801,EB211,0,0,3,0,0,0,0,0,0,0,0,0,0,0,0,0,2,0,0,3,0,0,0,0,0,0,0,0,2,0,9,0,0,2,0,0,0
-59,1523580,EB211,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,1,0,0,2,0,1,0,0,0,0,0,0,0,0,0,0
+Unnamed: 0,shoporder,Model,Assembly Error,Blade Does Not Pass Front Stop,Clips Out of Specification,Contamination,Continuity Fail,Cosmetic Defect,"Cracks, Splits, or Chips",Damaged Assembly After Slider Press,Damaged Harness Cable,Defective Components,Device Key Not Reading Device,Discolored Component,Engineering Instruction,Engineering Sample,Exposed Wire (Dynamic),Failed Trigger Gauge,Failure to Unlock Trigger,Front Stops Not Touching,Front and Middle Stops Not Touching,Fuse Switch,High Jaw Force,High Jaw Gap,Incorrect Configuration,Incorrect Insulation Orientation,Incorrect/Missing Weld,Insulation Damage,Jaw Short,Loose Knob Collar,Low Jaw Force,Low Jaw Gap,Material Underissue,Middle Stops Not Touching,Open Handle,Partial Pack,Particulate Matter,Program Verification Fail,Pull Test Samples,Rough Blade,Rough Jaw Actuation,Rough Knob Rotation,Scratched Logo,Scratches,Setup Scrap,Stuck Blade,Trigger Retraction,Vertical Misalignment,Wire Exposure
+3,1513568,EB211,0,0,0,0,2,2,0,0,5,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,0,0,5,0,0,0,0,1,0,0,0,1,0,0,0,0,0,0,0,0
+11,1504585,EB211,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+27,1519721,EB211,0,0,0,0,1,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+32,1524265,EB211,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+51,1521801,EB211,0,0,0,0,3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,0,0,3,0,0,0,0,0,0,0,0,0,0,2,0,0,0,9,0,0,0,0,2,0,0,0
+59,1523580,EB211,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,1,0,0,0,2,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+81,1478010,EB211,0,0,0,1,0,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,3,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0
+82,1476538,EB211,0,0,0,0,0,2,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,1,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0
+89,1478012,EB211,0,0,0,0,0,0,0,0,0,30,0,0,0,0,0,0,0,1,0,1,0,0,0,1,0,0,0,0,0,2,0,0,0,0,14,0,0,0,1,0,0,0,0,1,0,0,0
+96,1480304,EB211,0,0,0,0,1,1,0,0,3,6,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,0,1,0,0,0
+122,1474622,EB211,0,0,0,0,0,0,0,0,0,0,0,0,0,30,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+147,1486756,EB211,0,0,0,0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0
+161,1486324,EB211,0,0,0,0,0,1,0,0,3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0
+184,1490522,EB211,0,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,2,0,0,0
+197,1492703,EB211,0,0,0,1,1,1,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,4,0,4,3,1,2,0,0,1,0,0,0,0,0,0,0,0,19,1,0,2,0,4,6,0,0
+211,1494185,EB211,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+238,1500065,EB211,0,0,0,0,2,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0
+254,1500801,EB211,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+262,1502826,EB211,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+275,1504685,EB211,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+289,1507984,EB211,0,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,0,3,0,0,0,2,0,0,0,0,1,0,0,0
+301,1510778,EB211,0,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,0

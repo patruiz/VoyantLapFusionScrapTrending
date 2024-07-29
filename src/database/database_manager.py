@@ -44,7 +44,7 @@ class RSLManager:
             self._remove_blank_columns(csv_name)
             self._add_device_models(csv_name)
             self._generate_model_csv(csv_name, table)
-            # self._delete_main_csv(csv_name)
+            self._delete_main_csv(csv_name)
                             
     def _remove_blank_columns(self, csvfile):
         df = pd.read_csv(csvfile)
@@ -196,7 +196,6 @@ class RSLManager:
             self._load_operations(file_path, plant)
         elif (ref_type == 'Models' and plant == None):
             self._load_models(file_path)
-        
         self.commit_changes()
         
     def _load_plants(self, filepath):
@@ -454,16 +453,22 @@ class RSLManager:
                     if name in ['Material Overissue', 'Material Underissue', 'Fixed Quantity', 'Defective Components']:
                         continue
                     else:
-                        # print(so, component_pn, component_name, name, scrap_code, scrap_qty, plant)
                         self.curr.execute(f"""UPDATE ProdReworkLog SET '{name}' = ? WHERE shoporder = ?""", (scrap_qty/2, so))
             self.database.commit()
             
-            
-                
-                
-                
-                
-                
+
+
+    # CHECKING FUNCTION
+    def checking_function(self, shoporder, component_pn):
+        if (self.database and self.curr) != None:
+            # self.curr.execute("""SELECT scrap_code, scrap_qty FROM RSL WHERE so = ? AND component_pn = ?""", (shoporder, component_pn))
+            self.curr.execute("""SELECT scrap_code, scrap_qty FROM RSL WHERE so = ?""", (shoporder, ))
+            for code, qty in self.curr.fetchall():
+                self.curr.execute("""SELECT name FROM ScrapCodes WHERE id = ?""", (code, ))
+                name = [i for i in self.curr.fetchall()]
+                print(name, code, qty)
+
+
     # ANALYSIS FUNCTIONS
     def main_analysis_function(self, csvfile):
         if (self.database and self.curr) != None:
