@@ -48,8 +48,7 @@ def main():
         # CHEESE_DANNY.get_shoporder_scrap('1510779')
         # CHEESE_DANNY.update_scraplog()
         pass
-    
-    
+
     db_name = 'LapFusionRSL.db'
 
     plants = os.path.join(os.getcwd(), 'references', 'Plants.csv')

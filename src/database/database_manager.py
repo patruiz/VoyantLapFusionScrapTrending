@@ -11,7 +11,7 @@ class RSLManager:
         self.curr = None
         self.change_log = []
 
-    # GENERAL DATABASE FUNCTION
+    # GENERAL DATABASE FUNCTIONS
     def open_connection(self):
         try:
             self.database = sqlite3.connect(self.name)
@@ -403,6 +403,13 @@ class RSLManager:
                 elif plant == 'QC-DM1':
                     self.curr.execute(f"""UPDATE QCScrapLog SET '{name}' = ? WHERE shoporder = ?""", (scrap_qty, shoporder))
         self.database.commit()
+            
+            
+            
+    # REWORK FUNCTIONS
+    def main_rework_function(self):
+        pass
+            
             
             
     # ANALYSIS FUNCTIONS
