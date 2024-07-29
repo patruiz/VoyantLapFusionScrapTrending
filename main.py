@@ -20,29 +20,34 @@ def main():
 
     def run_cheese():
         PARMESAN = RSLManager(db_name)
-        PARMESAN.open_connection()
+        PARMESAN.open_connection() 
         PARMESAN.run_rsl(rsl)
+        PARMESAN.close_connection()
         # cheeseball.analyze_QCscrap()
         
     def scrap_cheese():
         MOZZARELLA = RSLManager(db_name)
         MOZZARELLA.open_connection()
         MOZZARELLA.main_scrap_function()
-        MOZZARELLA.export_table('QCScrapLog')
-        MOZZARELLA.remove_blank_columns('QCScrapLog_export.csv')
+        MOZZARELLA.close_connection()
         
-    def analysis_cheese():
+    def export_cheese():
         GOUDA = RSLManager(db_name)
         GOUDA.open_connection()
-        # GOUDA.main_analysis_function(1510779)
-        # ANALYZE_CHEESE.
+        GOUDA.export_table('QCScrapLog')
+        GOUDA.export_table('ProdScrapLog')
+        # GOUDA.export_table('ProdReworkLog')
+        GOUDA.close_connection()
 
     def test_cheese():
+        CHEESE_DANNY = RSLManager(db_name)
+        CHEESE_DANNY.open_connection()
+        CHEESE_DANNY.main_analysis_function('QCScrapLog_export.csv')
+        
+        CHEESE_DANNY.close_connection()
         # CHEESE_DANNY.get_shoporder_scrap('1510779')
         # CHEESE_DANNY.update_scraplog()
         pass
-    
-    
     
     
     db_name = 'LapFusionRSL.db'
@@ -60,7 +65,7 @@ def main():
     create_cheese()
     run_cheese()
     scrap_cheese()
-    # analysis_cheese()
+    export_cheese()
     # test_cheese()
 
 if __name__ == '__main__':
