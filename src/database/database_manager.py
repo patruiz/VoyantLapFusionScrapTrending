@@ -466,19 +466,24 @@ class RSLManager:
             for code, qty in self.curr.fetchall():
                 self.curr.execute("""SELECT name FROM ScrapCodes WHERE id = ?""", (code, ))
                 name = [i for i in self.curr.fetchall()]
-                print(name, code, qty)
-
+                # print(name, code, qty)
+    
+    def _get_RSL_scrap(self, shoporder):
+        if (self.database and self.curr) != None:
+            self.curr.execute("""SELECT * FROM RSL WHERE so = ?""", (shoporder, ))
+            # shoporders = [shoporder for shoporder in self.curr.fetchall()]
+            # print(shoporders)
+            for row in self.curr.fetchall():
+                print(row)
 
     # ANALYSIS FUNCTIONS
     def main_analysis_function(self, csvfile):
         if (self.database and self.curr) != None:
             self._generate_IMR_charts(csvfile)
         
-    def _generate_IMR_charts(self, csvfile):
-        df = pd.read_csv(csvfile)
-        self.curr.execute("""SELECT models FROM LapFusionModels""")
-        models = [i[0] for i in self.fetchall()]
+    def _generate_IMR_charts(self, log_type, model):
+        file_name = f"{log_type}_{model}.csv"
+        file_path = os.path.join(os.getcwd(), 'results', log_type, file_name)
         
-        for model in models:
-            for index, val in df.iterrows():
-                pass
+        df = pd.read_csv(file_path)
+        print(df)

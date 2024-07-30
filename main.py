@@ -53,13 +53,14 @@ def main():
     def check_cheese():
         SALMON = RSLManager(db_name)
         SALMON.open_connection()
-        SALMON.checking_function(1510779, 100928201)
+        SALMON._get_RSL_scrap(1510779)
+        SALMON.close_connection()
 
 
     def test_cheese():
         CHEESE_DANNY = RSLManager(db_name)
         CHEESE_DANNY.open_connection()
-        CHEESE_DANNY.main_analysis_function('QCScrapLog_export.csv')
+        CHEESE_DANNY._generate_IMR_charts('QCScrapLog', 'EB215')
         
         CHEESE_DANNY.close_connection()
         # CHEESE_DANNY.get_shoporder_scrap('1510779')
