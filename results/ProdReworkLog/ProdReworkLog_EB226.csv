@@ -1,6 +1,10 @@
-Unnamed: 0,shoporder,Model,Blade Does Not Pass Front Stop,Clips Out of Specification,Contamination,Continuity Fail,Cosmetic Defect,Damaged Front Blade Pushers,Damaged Harness Cable,Desired Pattern Not Found,Engineering Sample,Front Stops Not Touching,Front and Middle Stops Not Touching,Fuse Switch,High Jaw Force,High Jaw Gap,Incorrect Configuration,Incorrect Insulation Orientation,Incorrect Soldered Latis Location,Incorrect/Missing Weld,Insulation Damage,Jaw Short,Loose Knob Collar,Low Jaw Force,Low Jaw Gap,Middle Stops Not Touching,Rough Jaw Actuation,Rough Knob Rotation,Scratched Logo,Stuck Blade,Unable To Insert Blade Guide,Wire Exposure
-242,1500084,EB226,0,0,0.0,0,0,0,0,0,0,0,0,0,0,0,0.0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
-260,1502599,EB226,0,0,0.0,0,0,0,0,0,0,0,0,0,0,0,0.0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
-263,1504070,EB226,0,0,0.0,0,0,0,0,0,0,0,0,0,0,0,0.0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
-291,1508289,EB226,0,0,0.0,0,0,0,0,0,0,0,0,0,0,0,0.0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
-299,1509870,EB226,0,0,0.0,0,0,0,0,0,0,0,0,0,0,0,0.0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+Unnamed: 0,shoporder,Model,Blade Does Not Pass Front Stop,Clips Out of Specification,Contamination,Continuity Fail,Cosmetic Defect,Damaged Front Blade Pushers,Damaged Harness Cable,Desired Pattern Not Found,Engineering Sample,Faded Logo,Front Stops Not Touching,Front and Middle Stops Not Touching,Fuse Switch,High Jaw Force,High Jaw Gap,Incorrect Configuration,Incorrect Insulation Orientation,Incorrect Soldered Latis Location,Incorrect/Missing Weld,Insulation Damage,Jaw Short,Loose Knob Collar,Low Jaw Force,Low Jaw Gap,Middle Stops Not Touching,Misfeed,Rough Jaw Actuation,Rough Knob Rotation,Scratched Logo,Stuck Blade,Unable To Insert Blade Guide,Wire Exposure
+242,1500084,EB226,0.0,0,0.0,0,0,0,0,0,0,0,0,0,0,0,0.0,0.0,0.0,0,0,0,0.0,0,0.0,0,0,0,0.0,0,0,0.0,0,0
+260,1502599,EB226,0.0,0,0.0,0,0,0,0,0,0,0,0,0,0,0,0.0,0.0,0.0,0,0,0,0.0,0,0.0,0,0,0,0.0,0,0,0.0,0,0
+263,1504070,EB226,0.0,0,0.0,0,0,0,0,0,0,0,0,0,0,0,0.0,0.0,0.0,0,0,0,0.0,0,0.0,0,0,0,0.0,0,0,0.0,0,0
+291,1508289,EB226,0.0,0,0.0,0,0,0,0,0,0,0,0,0,0,0,0.0,0.0,0.0,0,0,0,0.0,0,0.0,0,0,0,0.0,0,0,0.0,0,0
+299,1509870,EB226,0.0,0,0.0,0,0,0,0,0,0,0,0,0,0,0,0.0,0.0,0.0,0,0,0,0.0,0,0.0,0,0,0,0.0,0,0,0.0,0,0
+366,1443558,EB226,0.0,0,0.0,0,0,0,0,0,0,0,0,0,0,0,0.0,0.0,0.0,0,0,0,0.0,0,0.0,0,0,0,0.0,0,0,0.0,0,0
+367,1443556,EB226,0.0,0,0.0,0,0,0,0,0,0,0,0,0,0,0,1.0,2.0,0.0,0,1,1,1.0,0,7.0,3,0,0,2.0,0,0,0.0,0,0
+451,1450840,EB226,0.0,0,0.0,0,0,0,0,0,0,0,0,0,0,0,0.0,0.0,0.0,0,0,0,0.0,0,0.0,0,0,0,0.0,0,0,0.0,0,0
+452,1450835,EB226,0.0,0,0.0,0,0,0,0,0,0,0,0,0,0,0,0.0,0.0,0.0,0,0,0,0.0,0,0.0,0,0,0,0.0,0,0,0.0,0,0

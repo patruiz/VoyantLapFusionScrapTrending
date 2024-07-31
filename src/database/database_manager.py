@@ -479,11 +479,17 @@ class RSLManager:
     # ANALYSIS FUNCTIONS
     def main_analysis_function(self, csvfile):
         if (self.database and self.curr) != None:
-            self._generate_IMR_charts(csvfile)
+            # self._generate_IMR_charts(csvfile)
+            pass
         
     def _generate_IMR_charts(self, log_type, model):
         file_name = f"{log_type}_{model}.csv"
         file_path = os.path.join(os.getcwd(), 'results', log_type, file_name)
         
-        df = pd.read_csv(file_path)
+        df = pd.read_csv(file_path, index_col = False)
         print(df)
+        
+    def _get_model_summary(self, model, start_date, end_date):
+        self.curr.execute("""SELECT num FROM ShopOrders JOIN LapFusionModels ON LapFusionModels.tl_pn = ShopOrders.tl_pn WHERE LapFusionModels.model = ?""", (model, ))
+        shoporders = sorted([i[0] for i in self.curr.fetchall()])
+        print(shoporders)

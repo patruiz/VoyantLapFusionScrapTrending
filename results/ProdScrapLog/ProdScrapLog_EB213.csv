@@ -1,12 +1,17 @@
-Unnamed: 0,shoporder,Model,Assembly Error,Blade Does Not Pass Front Stop,Clips Out of Specification,Contamination,Continuity Fail,Cosmetic Defect,"Cracks, Splits, or Chips",Damaged Assembly After Slider Press,Damaged Harness Cable,Defective Components,Device Key Not Reading Device,Discolored Component,Engineering Instruction,Engineering Sample,Exposed Wire (Dynamic),Failed Trigger Gauge,Failure to Unlock Trigger,Front Stops Not Touching,Front and Middle Stops Not Touching,Fuse Switch,High Jaw Force,High Jaw Gap,Incorrect Configuration,Incorrect Insulation Orientation,Incorrect/Missing Weld,Insulation Damage,Jaw Short,Loose Knob Collar,Low Jaw Force,Low Jaw Gap,Material Underissue,Middle Stops Not Touching,Open Handle,Partial Pack,Particulate Matter,Program Verification Fail,Pull Test Samples,Rough Blade,Rough Jaw Actuation,Rough Knob Rotation,Scratched Logo,Scratches,Setup Scrap,Stuck Blade,Trigger Retraction,Vertical Misalignment,Wire Exposure
-13,1517972,EB213,0,0,0,0,0,0,0,0,5,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
-36,1520624,EB213,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,0,0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
-45,1519724,EB213,0,0,0,0,1,2,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0
-53,1524591,EB213,0,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
-65,1474621,EB213,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
-74,1473553,EB213,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
-142,1486326,EB213,0,0,0,0,0,3,0,0,4,0,0,0,0,0,0,0,0,1,0,6,0,0,2,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,1,0,0,0,3,0,0,0
-167,1489750,EB213,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
-195,1492704,EB213,0,0,0,0,1,0,0,0,8,0,0,0,0,0,0,0,0,0,0,2,0,0,0,1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,3,0,0,0
-225,1496435,EB213,0,0,0,0,0,0,0,0,8,0,0,0,0,0,0,0,0,0,0,3,0,0,1,0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,1
-261,1501824,EB213,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0
+Unnamed: 0,shoporder,Model,Assembly Error,Blade Does Not Pass Front Stop,Clips Out of Specification,Contamination,Continuity Fail,Cosmetic Defect,"Cracks, Splits, or Chips",Damaged Assembly After Slider Press,Damaged Harness Cable,Defective Components,Device Key Not Reading Device,Discolored Component,Engineering Instruction,Engineering Sample,Exposed Wire (Dynamic),Faded Logo,Failed Trigger Gauge,Failure to Unlock Trigger,Front Stops Not Touching,Front and Middle Stops Not Touching,Fuse Switch,High Jaw Force,High Jaw Gap,Incorrect Configuration,Incorrect Insulation Orientation,Incorrect/Missing Weld,Insufficient Adhesive,Insulation Damage,Jaw Isolation,Jaw Short,Loose Knob Collar,Low Jaw Force,Low Jaw Gap,Material Overissue,Material Underissue,Middle Stops Not Touching,Open Handle,Partial Pack,Particulate Matter,Program Verification Fail,Pull Test Samples,Rough Blade,Rough Jaw Actuation,Rough Knob Rotation,Rough Rotation Shaft Rotation,Scratched Logo,Scratches,Setup Scrap,Squeaky Blade,Squeaky Knob,Stuck Blade,Test Samples(Gamma Audit),Trigger Retraction,Vertical Misalignment,Wire Exposure
+13,1517972,EB213,0,0,0,0,0,0,0,0,5,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+36,1520624,EB213,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,1,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+45,1519724,EB213,0,0,0,0,1,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0
+53,1524591,EB213,0,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+65,1474621,EB213,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+74,1473553,EB213,0,0,0,0,0,0,0,0,3,0,0,0,0,0,0,0,0,0,2,0,7,0,0,1,0,0,0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+142,1486326,EB213,0,0,0,0,0,3,0,0,4,0,0,0,0,0,0,0,0,0,1,0,6,0,0,2,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,3,0,0,0,0
+167,1489750,EB213,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+195,1492704,EB213,0,0,0,0,1,0,0,0,8,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,1,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,3,0,0,0,0
+225,1496435,EB213,0,0,0,0,0,0,0,0,8,0,0,0,0,0,0,0,0,0,0,0,3,0,0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1
+261,1501824,EB213,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+315,1438714,EB213,0,0,0,0,0,0,0,0,3,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1,0,2,0,0,1,0,0,0,0,0,0,2,26,0,0,2,0,0,0,0,0,0,2,0,2,0,0,0,0
+356,1441748,EB213,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,5,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+411,1444521,EB213,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+423,1446846,EB213,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+594,1469627,EB213,0,0,0,0,0,0,0,0,4,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,3,0,0,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,0
