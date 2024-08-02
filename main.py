@@ -49,19 +49,25 @@ def main():
         GOUDA.export_table('ProdScrapLog')
         GOUDA.export_table('ProdReworkLog')
         GOUDA.close_connection()
-
+        
     def check_cheese():
-        SALMON = RSLManager(db_name)
-        SALMON.open_connection()
-        SALMON._get_RSL_scrap(1510779)
-        SALMON.close_connection()
+        IDKANYMORE = RSLManager(db_name)
+        IDKANYMORE.open_connection()
+        IDKANYMORE._update_shoporder_scrap()
+        IDKANYMORE.close_connection()
+
+    # def check_cheese():
+    #     SALMON = RSLManager(db_name)
+    #     SALMON.open_connection()
+    #     SALMON._get_RSL_scrap(1510779)
+    #     SALMON.close_connection()
 
 
     def test_cheese():
         CHEESE_DANNY = RSLManager(db_name)
         CHEESE_DANNY.open_connection()
         # CHEESE_DANNY._generate_IMR_charts('QCScrapLog', 'EB215')
-        CHEESE_DANNY._get_model_summary('EB215')
+        # CHEESE_DANNY._get_model_summary('EB215')
         
         CHEESE_DANNY.close_connection()
         # CHEESE_DANNY.get_shoporder_scrap('1510779')
@@ -83,13 +89,13 @@ def main():
     # rsl_2019 = os.path.join(os.getcwd(), 'rsl', 'RSL_2019.csv')
     models = os.path.join(os.getcwd(), 'references', 'LapFusionModels.csv')
     
-    clear_cheese()
-    create_cheese()
-    run_cheese()
-    scrap_cheese()
-    rework_cheese()
-    export_cheese()
-    # check_cheese()
+    # clear_cheese()
+    # create_cheese()
+    # run_cheese()
+    # scrap_cheese()
+    # rework_cheese()
+    # export_cheese()
+    check_cheese()
     # test_cheese()
 
 if __name__ == '__main__':

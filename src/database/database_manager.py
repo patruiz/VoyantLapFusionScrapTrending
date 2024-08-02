@@ -123,7 +123,9 @@ class RSLManager:
             num INTEGER(7) PRIMARY KEY NOT NULL,
             tl_pn INTEGER(9) NOT NULL,
             description VARCHAR,
-            qty INTEGER NOT NULL,
+            so_qty INTEGER NOT NULL,
+            scrap_qty INTEGER DEFAULT 0 NOT NULL,
+            rework_qty INTEGER DEFAULT 0 NOT NULL,
             type TEXT,
             FOREIGN KEY(tl_pn) REFERENCES LapFusionModels(tl_pn)
             )
@@ -286,7 +288,7 @@ class RSLManager:
             self.curr.execute("""SELECT num FROM ShopOrders WHERE num = ?""", (shoporder_num, ))
             result = self.curr.fetchone()
             if result is None:
-                self.curr.execute("""INSERT INTO ShopOrders (num, tl_pn, description, qty, type) VALUES (?, ?, ?, ?, ?)""", (shoporder_num, tl_pn, description, qty, so_type))
+                self.curr.execute("""INSERT INTO ShopOrders (num, tl_pn, description, so_qty, type) VALUES (?, ?, ?, ?, ?)""", (shoporder_num, tl_pn, description, qty, so_type))
                 self.curr.execute("""SELECT num FROM ShopOrders WHERE num =?""", (shoporder_num, ))
                 result = self.curr.fetchone()
                 
@@ -403,8 +405,6 @@ class RSLManager:
                     self.curr.execute(f"""UPDATE QCScrapLog SET '{name}' = ? WHERE shoporder = ?""", (scrap_qty, shoporder))
         self.database.commit()
             
-            
-            
     # REWORK FUNCTIONS
     def main_rework_function(self):
         if (self.database and self.curr) != None:
@@ -475,6 +475,29 @@ class RSLManager:
             # print(shoporders)
             for row in self.curr.fetchall():
                 print(row)
+                
+                
+    # UPDATE FUNCTIONS
+    def _update_shoporder_scrap(self):
+        if (self.database and self.curr) != None:
+            self.curr.execute("""SELECT num FROM ShopOrders WHERE scrap_qty = ?""", (0, ))
+            shoporders = [i[0] for i in self.curr.fetchall()]
+            for shoporder in shoporders:
+                total_scrap = 0
+                self.curr.execute("""SELECT * FROM ProdScrapLog WHERE shoporder = ?""", (shoporder, ))
+                # scrap = [total_scrap += i[0] for i in self.curr.fetchall()]
+                # scrap = [i[1:len(i)] for i in self.curr.fetchall()]
+                scrap = [total_scrap + i[1:len(i)] for i in self.curr.fetchall()]
+                print(total_scrap)
+                print(scrap)
+                
+                print(scrap)
+                break
+            
+
+
+
+
 
     # ANALYSIS FUNCTIONS
     def main_analysis_function(self, csvfile):
@@ -489,7 +512,7 @@ class RSLManager:
         df = pd.read_csv(file_path, index_col = False)
         print(df)
         
-    def _get_model_summary(self, model, start_date, end_date):
+    def _get_model_summary(self, model, start_date = None, end_date = None):
         self.curr.execute("""SELECT num FROM ShopOrders JOIN LapFusionModels ON LapFusionModels.tl_pn = ShopOrders.tl_pn WHERE LapFusionModels.model = ?""", (model, ))
         shoporders = sorted([i[0] for i in self.curr.fetchall()])
         print(shoporders)
