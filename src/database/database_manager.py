@@ -478,21 +478,62 @@ class RSLManager:
                 
                 
     # UPDATE FUNCTIONS
-    def _update_shoporder_scrap(self):
+    def main_update_function(self):
         if (self.database and self.curr) != None:
-            self.curr.execute("""SELECT num FROM ShopOrders WHERE scrap_qty = ?""", (0, ))
-            shoporders = [i[0] for i in self.curr.fetchall()]
-            for shoporder in shoporders:
-                total_scrap = 0
-                self.curr.execute("""SELECT * FROM ProdScrapLog WHERE shoporder = ?""", (shoporder, ))
-                # scrap = [total_scrap += i[0] for i in self.curr.fetchall()]
-                # scrap = [i[1:len(i)] for i in self.curr.fetchall()]
-                scrap = [total_scrap + i[1:len(i)] for i in self.curr.fetchall()]
-                print(total_scrap)
-                print(scrap)
+            self._update_prod_shoporder_scrap()
+            
+    
+    
+    def _update_prod_shoporder_scrap(self):
+        self.curr.execute("""SELECT num FROM ShopOrders WHERE scrap_qty = ?""", (0, ))
+        shoporders = [i[0] for i in self.curr.fetchall()]
+        for shoporder in shoporders:
+            self.curr.execute("""SELECT * FROM ProdScrapLog WHERE shoporder = ?""", (shoporder, ))
+            prod_scrap_list = [i[1:len(i)] for i in self.curr.fetchall()]
+            prod_scrap_list = list(prod_scrap_list[0])
+            
+            total_scrap = 0
+            for scrap in prod_scrap_list:
+                total_scrap = total_scrap + scrap
+            
+            self.curr.execute("""SELECT * FROM QCScrapLog WHERE shoporder = ?""", (shoporder, ))
+            qc_scrap_list = [i[1:len(i)] for i in self.curr.fetchall()]
+            qc_scrap_list = list(qc_scrap_list[0])
+            
+            total_scrap = 0
+            for scrap in qc_scrap_list:
+                total_scrap = total_scrap + scrap
+                    
+    def _update_qc_shoporder_scrap(self):
+        self.curr.execute("""SELECT num FROM ShopOrders WHERE scrap_qty = ?""", (0, ))
+        shoporders = [i[0] for i in self.curr.fetchall()]
+        for shoporder in shoporders:
+            self.curr.execute("""SELECT * FROM ProdScrapLog WHERE shoporder = ?""", (shoporder, ))
+            prod_scrap_list = [i[1:len(i)] for i in self.curr.fetchall()]
+            prod_scrap_list = list(prod_scrap_list[0])
+            
+            total_scrap = 0
+            for scrap in prod_scrap_list:
+                total_scrap = total_scrap + scrap
+            
+            self.curr.execute("""SELECT * FROM QCScrapLog WHERE shoporder = ?""", (shoporder, ))
+            qc_scrap_list = [i[1:len(i)] for i in self.curr.fetchall()]
+            qc_scrap_list = list(qc_scrap_list[0])
+            
+            total_scrap = 0
+            for scrap in qc_scrap_list:
+                total_scrap = total_scrap + scrap
                 
-                print(scrap)
-                break
+                
+                
+
+                
+
+                    
+                
+                self.curr.execute("""UPDATE ShopOrders SET scrap_qty = ? WHERE num = ?""", (total_scrap, shoporder))
+            
+            self.commit_changes()
             
 
 
