@@ -482,8 +482,6 @@ class RSLManager:
         if (self.database and self.curr) != None:
             self._update_prod_shoporder_scrap()
             
-    
-    
     def _update_prod_shoporder_scrap(self):
         self.curr.execute("""SELECT num FROM ShopOrders WHERE scrap_qty = ?""", (0, ))
         shoporders = [i[0] for i in self.curr.fetchall()]
@@ -503,55 +501,41 @@ class RSLManager:
             total_scrap = 0
             for scrap in qc_scrap_list:
                 total_scrap = total_scrap + scrap
-                    
-    def _update_qc_shoporder_scrap(self):
-        self.curr.execute("""SELECT num FROM ShopOrders WHERE scrap_qty = ?""", (0, ))
-        shoporders = [i[0] for i in self.curr.fetchall()]
-        for shoporder in shoporders:
-            self.curr.execute("""SELECT * FROM ProdScrapLog WHERE shoporder = ?""", (shoporder, ))
-            prod_scrap_list = [i[1:len(i)] for i in self.curr.fetchall()]
-            prod_scrap_list = list(prod_scrap_list[0])
-            
-            total_scrap = 0
+                
             for scrap in prod_scrap_list:
                 total_scrap = total_scrap + scrap
-            
-            self.curr.execute("""SELECT * FROM QCScrapLog WHERE shoporder = ?""", (shoporder, ))
-            qc_scrap_list = [i[1:len(i)] for i in self.curr.fetchall()]
-            qc_scrap_list = list(qc_scrap_list[0])
-            
-            total_scrap = 0
-            for scrap in qc_scrap_list:
-                total_scrap = total_scrap + scrap
                 
-                
-                
-
-                
-
-                    
-                
-                self.curr.execute("""UPDATE ShopOrders SET scrap_qty = ? WHERE num = ?""", (total_scrap, shoporder))
-            
+            self.curr.execute("""UPDATE ShopOrders SET scrap_qty = ? WHERE num = ?""", (total_scrap, shoporder))
             self.commit_changes()
-            
-
+                    
 
 
 
 
     # ANALYSIS FUNCTIONS
-    def main_analysis_function(self, csvfile):
+    def main_analysis_function(self):
         if (self.database and self.curr) != None:
             # self._generate_IMR_charts(csvfile)
             pass
         
-    def _generate_IMR_charts(self, log_type, model):
+        
+    # THIS SHOULD GET DATA NOT FROM THE RESULT CSVS. IT SHOULD BE FROM COMBINED DATA BETWEEN PROD AND QC     
+    def _generate_IMR_charts(self, log_type, model, scrap): 
         file_name = f"{log_type}_{model}.csv"
         file_path = os.path.join(os.getcwd(), 'results', log_type, file_name)
         
         df = pd.read_csv(file_path, index_col = False)
-        print(df)
+        shoporders = list(df.loc[:, 'shoporder'])
+        
+        shoporder_qty = []
+        for shoporder in shoporders:
+            self.curr.execute("""SELECT so_qty FROM ShopOrders WHERE num = ?""", (shoporder, ))
+            shoporder_qty.append(int(self.curr.fetchone()[0]) * 6)
+        
+        scrap_qty = list(df.loc[:, scrap])
+        
+        new_df = pd.DataFrame(list(zip(shoporders, shoporder_qty, scrap_qty)), columns = ['Shop Order', 'Shop Order Qty', 'Scrap Qty'])
+        print(new_df)
         
     def _get_model_summary(self, model, start_date = None, end_date = None):
         self.curr.execute("""SELECT num FROM ShopOrders JOIN LapFusionModels ON LapFusionModels.tl_pn = ShopOrders.tl_pn WHERE LapFusionModels.model = ?""", (model, ))
