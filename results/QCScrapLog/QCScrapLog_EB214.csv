@@ -1,12 +1,12 @@
-Unnamed: 0,shoporder,Model,Blade Activation,Bleeding Ink,Continuity Fail,Creases,Device Key Not Reading,Electrode Continuity,Exposed Wire (Static),Front Stops Not Touching,Fuse Switch,High Jaw Force,High Jaw Force ,High Jaw Gap,Incorrect Insulation Orientation,Insulation Damage,Jaw Isolation,Jaw Short,Knob Rotation,Low Jaw Force,Low Jaw Gap,Misaligned ,QC- Particulate Matter,Scratches,Stuck Blade,Tears,Trigger Actuation,Trigger Retraction,Unparallel Logos,Wrinkles
-15,1512025,EB214,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
-31,1524588,EB214,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
-67,1473554,EB214,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
-166,1490056,EB214,3,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0
-179,1479547,EB214,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
-221,1495283,EB214,1,0,0,0,0,1,0,0,3,0,0,0,0,0,0,1,0,1,0,0,0,0,0,0,0,0,0,0
-249,1501521,EB214,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0
-327,1438535,EB214,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
-385,1444810,EB214,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
-482,1456327,EB214,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
-595,1469628,EB214,7,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0
+Unnamed: 0,shoporder,Model,Blade Activation,Blade Does Not Pass Front Stop,Bleeding Ink,Contamination,Continuity Fail,Creases,Device Key Not Reading,Device Key Not Reading Device,Electrode Continuity,Exposed Wire (Static),Front Stops Not Touching,Fuse Switch,High Jaw Force,High Jaw Force ,High Jaw Gap,Incorrect Insulation Orientation,Insulation Damage,Jaw Isolation,Jaw Short,Knob Rotation,Loose Knob Collar,Low Jaw Force,Low Jaw Gap,Middle Stops Not Touching,Misaligned ,QC- Particulate Matter,Rough Actuation,Rough Blade,Rough Jaw Actuation,Rough Knob Rotation,Scratches,Stuck Blade,Tears,Trigger Actuation,Trigger Retraction,Unparallel Logos,Wrinkles
+15,1512025,EB214,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+31,1524588,EB214,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+67,1473554,EB214,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+166,1490056,EB214,3,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+179,1479547,EB214,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+221,1495283,EB214,1,0,0,0,0,0,0,0,1,0,0,3,0,0,0,0,0,0,1,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+249,1501521,EB214,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+327,1438535,EB214,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+385,1444810,EB214,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+482,1456327,EB214,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+595,1469628,EB214,7,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0

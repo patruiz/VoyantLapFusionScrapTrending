@@ -4,7 +4,9 @@ import math
 import sqlite3 
 import numpy as np
 import pandas as pd 
+
 import matplotlib.pyplot as plt
+import plotly.graph_objects as go
 
 class RSLManager:
     def __init__(self, db_name):
@@ -12,6 +14,7 @@ class RSLManager:
         self.database = None
         self.curr = None
         self.change_log = []
+        self.errors = []
 
     # GENERAL DATABASE FUNCTIONS
     def open_connection(self):
@@ -261,11 +264,16 @@ class RSLManager:
             _scrap_cost = val.loc['Cost']
             _scrap_qty = val.loc['Scrap/Rework Qty']
             
-            if (self._filter_model(_so_pn) != None):
-                self._add_scrap(_date, _so, _scrap_pn, _scrapcode_id, _scrap_qty, _scrap_cost, _plant)
-                self._add_shoporder(_so, _so_pn, _so_desc, _so_qty, _status)
-                self._add_component(_so_pn, _scrap_pn, _scrap_desc)
-            
+            try:
+                if (self._filter_model(_so_pn) != None):
+                    self._add_scrap(_date, _so, _scrap_pn, _scrapcode_id, _scrap_qty, _scrap_cost, _plant)
+                    self._add_shoporder(_so, _so_pn, _so_desc, _so_qty, _status)
+                    self._add_component(_so_pn, _scrap_pn, _scrap_desc)
+            except:
+                self.errors.append(dict(df.iloc[index]))
+        
+        print(len(self.errors))
+                
         self.commit_changes()
             
     def _filter_model(self, material_num):
@@ -302,46 +310,9 @@ class RSLManager:
                 self.curr.execute("""INSERT INTO Components (component_pn, description, tl_pn) VALUES (?, ?, ?)""", (_scrap_pn, _scrap_desc, _so_pn))
             else:
                 return result[0]
-
-    # def analyze_QCscrap(self):
-    #     if (self.database and self.curr) != None:
-    #         self._create_QCscraplog_table()
-    #         self._find_QCscrap()
-
-    # def _create_QCscraplog_table(self):
-    #     self.curr.execute(
-    #         """
-    #         CREATE TABLE IF NOT EXISTS QCScrapLog (
-    #         shoporder INTEGER(7) PRIMARY KEY NOT NULL,
-    #         FOREIGN KEY(shoporder) REFERENCES ShopOrders(num))
-    #         """
-    #     )
-        
-    #     self.curr.execute("""SELECT id FROM ScrapCodes WHERE plant = ?""", ('QC-DM1', ))
-    #     for i in self.curr.fetchall():
-    #         self.curr.execute(f"""ALTER TABLE QCScrapLog ADD COLUMN '{str(i[0])}' INTEGER DEFAULT 0 NOT NULL""")
-    #         self.commit_changes()
-    
-    # def _find_QCscrap(self):
-    #     self.curr.execute("""SELECT num, tl_pn FROM ShopOrders""")
-    #     shoporder_list = [i for i in self.curr.fetchall()]
-    #     for shoporder in shoporder_list:
-    #         print(f"\nShoporder: {shoporder[0]}")
-    #         self.curr.execute(f"""SELECT shoporder FROM QCScrapLog WHERE shoporder = ?""", (shoporder[0], ))
-    #         result = self.curr.fetchone()
-    #         # if result != None: 
-    #         #     continue
-
-    #         self.curr.execute("""SELECT scrap_code, scrap_qty FROM RSL WHERE so = ? AND component_pn = ? AND plant = ?""", (shoporder[0], shoporder[1], 'QC-DM1'))
-    #         scrap_list = self.curr.fetchall()
-    #         print(f"QC-DM1 Scrap List: {scrap_list}")
-    #         self.curr.execute("""INSERT INTO QCScrapLog (shoporder) VALUES (?)""", (shoporder[0], ))
-    #         for scrap in scrap_list:
-    #             try:
-    #                 self.curr.execute(f"""UPDATE QCScrapLog SET '{str(scrap[0])}' = ? WHERE shoporder = ?""", (int(scrap[1]), shoporder[0]))
-    #                 self.commit_changes()
-    #             except Exception as e:
-    #                 print(f"Error: {e}")
+                
+                
+                
                     
     # SCRAP FUNCTIONS 
     def main_scrap_function(self):
@@ -407,6 +378,11 @@ class RSLManager:
                     self.curr.execute(f"""UPDATE QCScrapLog SET '{name}' = ? WHERE shoporder = ?""", (scrap_qty, shoporder))
         self.database.commit()
             
+            
+            
+            
+            
+            
     # REWORK FUNCTIONS
     def main_rework_function(self):
         if (self.database and self.curr) != None:
@@ -460,24 +436,7 @@ class RSLManager:
             
 
 
-    # CHECKING FUNCTION
-    def checking_function(self, shoporder, component_pn):
-        if (self.database and self.curr) != None:
-            # self.curr.execute("""SELECT scrap_code, scrap_qty FROM RSL WHERE so = ? AND component_pn = ?""", (shoporder, component_pn))
-            self.curr.execute("""SELECT scrap_code, scrap_qty FROM RSL WHERE so = ?""", (shoporder, ))
-            for code, qty in self.curr.fetchall():
-                self.curr.execute("""SELECT name FROM ScrapCodes WHERE id = ?""", (code, ))
-                name = [i for i in self.curr.fetchall()]
-                # print(name, code, qty)
     
-    def _get_RSL_scrap(self, shoporder):
-        if (self.database and self.curr) != None:
-            self.curr.execute("""SELECT * FROM RSL WHERE so = ?""", (shoporder, ))
-            # shoporders = [shoporder for shoporder in self.curr.fetchall()]
-            # print(shoporders)
-            for row in self.curr.fetchall():
-                print(row)
-                
                 
     # UPDATE FUNCTIONS
     def main_update_function(self):
@@ -542,41 +501,104 @@ class RSLManager:
     # ANALYSIS FUNCTIONS
     def main_analysis_function(self):
         if (self.database and self.curr) != None:
-            # self._generate_yield_chart()
-            pass
+            self._generate_yield_chart()
         
+    # def _generate_yield_chart(self, model):
+    #     self.curr.execute("""SELECT num, so_qty, scrap_qty FROM ShopOrders JOIN LapFusionModels ON LapFusionModels.tl_pn = ShopOrders.tl_pn WHERE LapFusionModels.model = ? AND ShopOrders.type = ? ORDER BY num ASC""", (model, 'Production'))
+    #     so_list = [i for i in self.curr.fetchall()]
+        
+    #     yield_list = []
+    #     for so in so_list:
+    #         yield_list.append([so[0], so[1], so[1] - so[2], abs(round(((so[2] - so[1])/so[1])*100, 2))])
+
+    #     yield_percents = [i[3] for i in yield_list]
+        
+    #     u = round(np.average(yield_percents), 2)
+    #     yield_std = round(np.std(yield_percents), 4)
+    #     yield_ucl = u + 3*yield_std
+    #     yield_lcl = u - 3*yield_std
+        
+    #     x = [str(i[0]) for i in yield_list]
+    #     y = yield_percents
+        
+    #     plt.title(f"{model} Shop Order Yield")
+    #     plt.xlabel('Shop Orders')
+    #     plt.ylabel('Yield (%)')
+    #     plt.plot(x, y, '-ob')
+    #     plt.show()
+    
+    
     def _generate_yield_chart(self, model):
-        self.curr.execute("""SELECT num, so_qty, scrap_qty FROM ShopOrders JOIN LapFusionModels ON LapFusionModels.tl_pn = ShopOrders.tl_pn WHERE LapFusionModels.model = ?""", (model, ))
+        self.curr.execute("""
+            SELECT num, so_qty, scrap_qty
+            FROM ShopOrders
+            JOIN LapFusionModels ON LapFusionModels.tl_pn = ShopOrders.tl_pn
+            WHERE LapFusionModels.model = ? AND ShopOrders.type = ?
+            ORDER BY num ASC
+        """, (model, 'Production'))
+        
         so_list = [i for i in self.curr.fetchall()]
+
         yield_list = []
         for so in so_list:
             yield_list.append([so[0], so[1], so[1] - so[2], abs(round(((so[2] - so[1])/so[1])*100, 2))])
 
         yield_percents = [i[3] for i in yield_list]
-        
+
         u = round(np.average(yield_percents), 2)
         yield_std = round(np.std(yield_percents), 4)
-        yield_ucl = u + 3*yield_std
-        yield_lcl = u - 3*yield_std
-        
+        yield_ucl = u + 3 * yield_std
+        yield_lcl = u - 3 * yield_std
+
         x = [str(i[0]) for i in yield_list]
         y = yield_percents
-        
-        x = x[:15]
-        y = y[:15]
-        
-        plt.title(f"{model} Shop Order Yield")
-        plt.xlabel('Shop Orders')
-        plt.ylabel('Yield (%)')
-        plt.plot(x, y, '-ob')
-        plt.show()
-        
 
-        
-        
-        
+        fig = go.Figure()
+
+        fig.add_trace(go.Scatter(
+            x=x,
+            y=y,
+            mode='markers+lines',
+            marker=dict(color='blue'),
+            text=[f"Shop Order: {so[0]}<br>Yield: {y[i]:.2f}%" for i, so in enumerate(yield_list)],
+            hoverinfo='text'
+        ))
+
+        fig.update_layout(
+            title=f"{model} Shop Order Yield",
+            xaxis_title='Shop Orders',
+            yaxis_title='Yield (%)',
+        )
+
+        fig.show()
         
     def _get_model_summary(self, model, start_date = None, end_date = None):
         self.curr.execute("""SELECT num FROM ShopOrders JOIN LapFusionModels ON LapFusionModels.tl_pn = ShopOrders.tl_pn WHERE LapFusionModels.model = ?""", (model, ))
         shoporders = sorted([i[0] for i in self.curr.fetchall()])
         # print(shoporders)
+        
+        
+        
+        
+        
+        
+    # CHECKING FUNCTION
+        def checking_function(self, shoporder, component_pn):
+            if (self.database and self.curr) != None:
+                # self.curr.execute("""SELECT scrap_code, scrap_qty FROM RSL WHERE so = ? AND component_pn = ?""", (shoporder, component_pn))
+                self.curr.execute("""SELECT scrap_code, scrap_qty FROM RSL WHERE so = ?""", (shoporder, ))
+                for code, qty in self.curr.fetchall():
+                    self.curr.execute("""SELECT name FROM ScrapCodes WHERE id = ?""", (code, ))
+                    name = [i for i in self.curr.fetchall()]
+                    # print(name, code, qty)
+        
+        def _get_RSL_scrap(self, shoporder):
+            if (self.database and self.curr) != None:
+                self.curr.execute("""SELECT * FROM RSL WHERE so = ?""", (shoporder, ))
+                # shoporders = [shoporder for shoporder in self.curr.fetchall()]
+                # print(shoporders)
+                for row in self.curr.fetchall():
+                    print(row)
+                    
+                
+                
