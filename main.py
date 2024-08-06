@@ -53,37 +53,14 @@ def main():
     def update_cheese():
         ITSWEDNESDAYMYDUDES = RSLManager(db_name)
         ITSWEDNESDAYMYDUDES.open_connection()
-        
         ITSWEDNESDAYMYDUDES.main_update_function()
-        
         ITSWEDNESDAYMYDUDES.close_connection()
         
-    def check_cheese():
-        IDKANYMORE = RSLManager(db_name)
-        IDKANYMORE.open_connection()
-        IDKANYMORE._update_prod_shoporder_scrap()
-        IDKANYMORE.close_connection()
-
-    # def check_cheese():
-    #     SALMON = RSLManager(db_name)
-    #     SALMON.open_connection()
-    #     SALMON._get_RSL_scrap(1510779)
-    #     SALMON.close_connection()
-
-
-    def test_cheese():
-        CHEESE_DANNY = RSLManager(db_name)
-        CHEESE_DANNY.open_connection()
-        CHEESE_DANNY._generate_IMR_charts('ProdScrapLog', 'EB215', 'Stuck Blade')
-        # CHEESE_DANNY._get_model_summary('EB215')
-        
-        CHEESE_DANNY.close_connection()
-        # CHEESE_DANNY.get_shoporder_scrap('1510779')
-        # CHEESE_DANNY.update_scraplog()
-        pass
-    
-    
-    
+    def analyze_cheese():
+        REEEEEEEEE = RSLManager(db_name)
+        REEEEEEEEE.open_connection()
+        REEEEEEEEE._generate_yield_chart('EB215')
+        REEEEEEEEE.close_connection()
 
     db_name = 'LapFusionRSL.db'
 
@@ -107,9 +84,9 @@ def main():
     # rework_cheese()
     # export_cheese()
     # update_cheese()
+    analyze_cheese()
     
     # check_cheese()
-    test_cheese()
     
 
 

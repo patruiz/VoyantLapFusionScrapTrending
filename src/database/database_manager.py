@@ -2,7 +2,9 @@ import os
 import csv
 import math
 import sqlite3 
+import numpy as np
 import pandas as pd 
+import matplotlib.pyplot as plt
 
 class RSLManager:
     def __init__(self, db_name):
@@ -241,7 +243,7 @@ class RSLManager:
     
     # RSL FUNCTIONS            
     def run_rsl(self, csvfile):
-        df = pd.read_csv(csvfile)
+        df = pd.read_csv(csvfile, low_memory = False)
         for index, val in df.iterrows():
             _rsl_num = val.loc['RSL #']
             _date = val.loc['Date']
@@ -480,19 +482,26 @@ class RSLManager:
     # UPDATE FUNCTIONS
     def main_update_function(self):
         if (self.database and self.curr) != None:
-            self._update_prod_shoporder_scrap()
+            self._convert_so_qty()
+            self._update_scrap_qty()
+            self._update_rework_qty()
             
-    def _update_prod_shoporder_scrap(self):
-        self.curr.execute("""SELECT num FROM ShopOrders WHERE scrap_qty = ?""", (0, ))
+    def _convert_so_qty(self):
+        self.curr.execute("""SELECT num FROM ShopOrders""")
+        shoporders = [i[0] for i in self.curr.fetchall()]
+        for shoporder in shoporders:
+            self.curr.execute("""SELECT so_qty FROM ShopOrders WHERE num = ?""", (shoporder, ))
+            so_qty = self.curr.fetchone()[0] * 6
+            self.curr.execute("""UPDATE ShopOrders SET so_qty = ? WHERE num = ?""", (so_qty, shoporder))
+        self.commit_changes()
+            
+    def _update_scrap_qty(self):
+        self.curr.execute("""SELECT num FROM ShopOrders""")
         shoporders = [i[0] for i in self.curr.fetchall()]
         for shoporder in shoporders:
             self.curr.execute("""SELECT * FROM ProdScrapLog WHERE shoporder = ?""", (shoporder, ))
             prod_scrap_list = [i[1:len(i)] for i in self.curr.fetchall()]
             prod_scrap_list = list(prod_scrap_list[0])
-            
-            total_scrap = 0
-            for scrap in prod_scrap_list:
-                total_scrap = total_scrap + scrap
             
             self.curr.execute("""SELECT * FROM QCScrapLog WHERE shoporder = ?""", (shoporder, ))
             qc_scrap_list = [i[1:len(i)] for i in self.curr.fetchall()]
@@ -506,8 +515,26 @@ class RSLManager:
                 total_scrap = total_scrap + scrap
                 
             self.curr.execute("""UPDATE ShopOrders SET scrap_qty = ? WHERE num = ?""", (total_scrap, shoporder))
-            self.commit_changes()
-                    
+        
+        self.commit_changes()    
+        
+    def _update_rework_qty(self):
+        self.curr.execute("""SELECT num FROM ShopOrders""")
+        shoporders = [i[0] for i in self.curr.fetchall()]
+        for shoporder in shoporders:
+            self.curr.execute("""SELECT * FROM ProdReworkLog WHERE shoporder = ?""", (shoporder, ))
+            prod_rework_list = [i[1:len(i)] for i in self.curr.fetchall()]
+            prod_rework_list = list(prod_rework_list[0])
+            
+            total_rework = 0
+            for rework in prod_rework_list:
+                total_rework = total_rework + rework
+                
+            self.curr.execute("""UPDATE ShopOrders SET rework_qty = ? WHERE num = ?""", (total_rework, shoporder))
+        
+        self.commit_changes()
+                
+        
 
 
 
@@ -515,29 +542,41 @@ class RSLManager:
     # ANALYSIS FUNCTIONS
     def main_analysis_function(self):
         if (self.database and self.curr) != None:
-            # self._generate_IMR_charts(csvfile)
+            # self._generate_yield_chart()
             pass
         
+    def _generate_yield_chart(self, model):
+        self.curr.execute("""SELECT num, so_qty, scrap_qty FROM ShopOrders JOIN LapFusionModels ON LapFusionModels.tl_pn = ShopOrders.tl_pn WHERE LapFusionModels.model = ?""", (model, ))
+        so_list = [i for i in self.curr.fetchall()]
+        yield_list = []
+        for so in so_list:
+            yield_list.append([so[0], so[1], so[1] - so[2], abs(round(((so[2] - so[1])/so[1])*100, 2))])
+
+        yield_percents = [i[3] for i in yield_list]
         
-    # THIS SHOULD GET DATA NOT FROM THE RESULT CSVS. IT SHOULD BE FROM COMBINED DATA BETWEEN PROD AND QC     
-    def _generate_IMR_charts(self, log_type, model, scrap): 
-        file_name = f"{log_type}_{model}.csv"
-        file_path = os.path.join(os.getcwd(), 'results', log_type, file_name)
+        u = round(np.average(yield_percents), 2)
+        yield_std = round(np.std(yield_percents), 4)
+        yield_ucl = u + 3*yield_std
+        yield_lcl = u - 3*yield_std
         
-        df = pd.read_csv(file_path, index_col = False)
-        shoporders = list(df.loc[:, 'shoporder'])
+        x = [str(i[0]) for i in yield_list]
+        y = yield_percents
         
-        shoporder_qty = []
-        for shoporder in shoporders:
-            self.curr.execute("""SELECT so_qty FROM ShopOrders WHERE num = ?""", (shoporder, ))
-            shoporder_qty.append(int(self.curr.fetchone()[0]) * 6)
+        x = x[:15]
+        y = y[:15]
         
-        scrap_qty = list(df.loc[:, scrap])
+        plt.title(f"{model} Shop Order Yield")
+        plt.xlabel('Shop Orders')
+        plt.ylabel('Yield (%)')
+        plt.plot(x, y, '-ob')
+        plt.show()
         
-        new_df = pd.DataFrame(list(zip(shoporders, shoporder_qty, scrap_qty)), columns = ['Shop Order', 'Shop Order Qty', 'Scrap Qty'])
-        print(new_df)
+
+        
+        
+        
         
     def _get_model_summary(self, model, start_date = None, end_date = None):
         self.curr.execute("""SELECT num FROM ShopOrders JOIN LapFusionModels ON LapFusionModels.tl_pn = ShopOrders.tl_pn WHERE LapFusionModels.model = ?""", (model, ))
         shoporders = sorted([i[0] for i in self.curr.fetchall()])
-        print(shoporders)
+        # print(shoporders)
